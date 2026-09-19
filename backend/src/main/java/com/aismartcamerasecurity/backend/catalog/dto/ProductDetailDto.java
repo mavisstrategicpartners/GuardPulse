@@ -3,7 +3,7 @@ package com.aismartcamerasecurity.backend.catalog.dto;
 import java.util.List;
 
 import com.aismartcamerasecurity.backend.catalog.Product;
-import com.aismartcamerasecurity.backend.catalog.ProductSpec;
+
 
 public class ProductDetailDto extends ProductSummaryDto {
     public String sku;
