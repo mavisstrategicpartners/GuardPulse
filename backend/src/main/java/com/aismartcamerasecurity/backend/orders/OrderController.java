@@ -11,24 +11,29 @@ import org.springframework.web.server.ResponseStatusException;
 import com.aismartcamerasecurity.backend.mail.OrderNotifier;
 import com.aismartcamerasecurity.backend.orders.dto.CheckoutRequest;
 import com.aismartcamerasecurity.backend.orders.dto.OrderDto;
+import com.aismartcamerasecurity.backend.shipping.ShippingService;
 
+ 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
-
+ 
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
     private final OrderNotifier orderNotifier;
-
+    private final ShippingService shippingService;
+ 
     public OrderController(OrderRepository orderRepository, CartRepository cartRepository,
-                            OrderNotifier orderNotifier) {
+                            OrderNotifier orderNotifier, ShippingService shippingService) {
         this.orderRepository = orderRepository;
         this.cartRepository = cartRepository;
         this.orderNotifier = orderNotifier;
+        this.shippingService = shippingService;
     }
-
+ 
     @PostMapping({"", "/"})
     @Transactional
     public ResponseEntity<OrderDto> checkout(@Valid @RequestBody CheckoutRequest request) {
@@ -42,14 +47,19 @@ public class OrderController {
         if (cart.getItems().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cart is empty");
         }
-
+ 
+        // Shipping is always computed here from the cart's actual weight — never taken from
+        // the request. A client-supplied shipping_fee would let anyone check out for free
+        // delivery just by sending 0.
+        BigDecimal shippingFee = shippingService.computeFee(cart.getItems());
+ 
         Order order = new Order(
                 request.fullName, request.email, request.phone,
                 request.addressLine1, request.addressLine2,
                 request.city, request.province, request.postalCode,
-                request.shippingFee
+                shippingFee
         );
-
+ 
         try {
             for (CartItem cartItem : cart.getItems()) {
                 // Decrement stock now, at the point of purchase — not earlier at add-to-cart time,
@@ -61,23 +71,23 @@ public class OrderController {
             throw new ResponseStatusException(HttpStatus.CONFLICT, outOfStock.getMessage());
         }
         order.recalculateTotal();
-
+ 
         try {
-            orderRepository.save(order);
+            orderRepository.saveAndFlush(order);
         } catch (ObjectOptimisticLockingFailureException race) {
             // Someone else's checkout decremented the same product's stock between our read and write.
             throw new ResponseStatusException(HttpStatus.CONFLICT,
                     "Stock changed while placing your order — please review your cart and try again.");
         }
-
+ 
         cart.getItems().clear();
         cartRepository.save(cart);
-
+ 
         orderNotifier.notifyOrderPlaced(order);
-
+ 
         return ResponseEntity.status(HttpStatus.CREATED).body(OrderDto.from(order));
     }
-
+ 
     @GetMapping("/{reference}/")
     public OrderDto lookup(@PathVariable String reference) {
         try {
@@ -88,7 +98,7 @@ public class OrderController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found");
         }
     }
-
+ 
     /**
      * Lets a guest-checkout customer find an order again if they've lost their confirmation
      * email/link. Requires both the reference AND the email on the order to match — a bare
@@ -109,5 +119,4 @@ public class OrderController {
         return OrderDto.from(order);
     }
 }
-
-
+ 

@@ -22,6 +22,12 @@
             <label for="stockQty">Stock quantity</label>
             <input type="number" id="stockQty" name="stockQty" th:value="${product.stockQty}" required>
 
+            <label for="weightKg">Shipping weight (kg)</label>
+<input type="number" step="0.01" min="0" id="weightKg" name="weightKg" th:value="${product.weightKg}" required>
+<p class="muted" style="margin:-10px 0 16px;">
+    Boxed weight incl. packaging — used to calculate the shipping fee at checkout.
+</p>
+
             <div class="checkbox-row">
                 <input type="checkbox" id="active" name="active" th:checked="${product.active}">
                 <label for="active" style="margin:0;">Active (visible in the store)</label>

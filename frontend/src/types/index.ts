@@ -49,7 +49,8 @@ export interface CheckoutPayload {
   city: string;
   province: string;
   postal_code: string;
-  shipping_fee?: number;
+  // shipping_fee intentionally omitted — the backend computes it server-side from the
+  // cart's actual weight (see ShippingService) and would reject an unrecognized field.
 }
 
 export interface OrderItem {

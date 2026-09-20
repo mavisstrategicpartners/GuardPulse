@@ -154,3 +154,20 @@ export async function fetchStoreInfo(): Promise<StoreInfo> {
   const { data } = await api.get<StoreInfo>("/store-info");
   return data;
 }
+
+// ---- Shipping ----
+
+export interface ShippingQuote {
+  fee: number;
+  weight_kg: number;
+}
+
+/**
+ * Live estimate for the checkout page — the order's real shipping_fee is always
+ * recomputed server-side from the same logic at checkout time, so this is a preview,
+ * not something the client can influence.
+ */
+export async function fetchShippingQuote(cartToken: string): Promise<ShippingQuote> {
+  const { data } = await api.get<ShippingQuote>("/shipping/quote", { params: { cart_token: cartToken } });
+  return data;
+}

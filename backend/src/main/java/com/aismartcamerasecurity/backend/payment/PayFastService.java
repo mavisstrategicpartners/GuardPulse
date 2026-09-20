@@ -1,11 +1,10 @@
 package com.aismartcamerasecurity.backend.payment;
 
+import com.aismartcamerasecurity.backend.orders.Order;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import com.aismartcamerasecurity.backend.orders.Order;
-
+ 
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
@@ -28,16 +27,16 @@ import java.util.Map;
  */
 @Service
 public class PayFastService {
-
+ 
     private static final Logger log = LoggerFactory.getLogger(PayFastService.class);
-
+ 
     private final PayFastProperties props;
     private final HttpClient httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
-
+ 
     public PayFastService(PayFastProperties props) {
         this.props = props;
     }
-
+ 
     /** Builds the full field set (including signature) to redirect the customer to PayFast with. */
     public Map<String, String> buildPaymentFields(Order order) {
         // LinkedHashMap: PayFast's signature is order-sensitive, so field insertion order matters.
@@ -47,20 +46,27 @@ public class PayFastService {
         fields.put("return_url", props.getReturnUrl() + "/" + order.getReference());
         fields.put("cancel_url", props.getCancelUrl() + "/" + order.getReference());
         fields.put("notify_url", props.getNotifyUrl());
-
+ 
         String[] names = order.getFullName().trim().split("\\s+", 2);
         fields.put("name_first", names[0]);
-        fields.put("name_last", names.length > 1 ? names[1] : "");
+        // Only include name_last when there actually is one — sending it as an empty string
+        // caused an intermittent signature mismatch for single-word names, because PayFast's
+        // own signature check doesn't necessarily skip blank fields the same way ours does.
+        // Omitting the field entirely removes the ambiguity rather than relying on both sides
+        // agreeing on how to treat blanks.
+        if (names.length > 1 && !names[1].isBlank()) {
+            fields.put("name_last", names[1]);
+        }
         fields.put("email_address", order.getEmail());
-
+ 
         fields.put("m_payment_id", order.getReference().toString());
         fields.put("amount", order.getTotal().setScale(2, java.math.RoundingMode.HALF_UP).toString());
-        fields.put("item_name", "AI Smart Camera Security order " + order.getReference());
-
+        fields.put("item_name", "Nightwatch order " + order.getReference());
+ 
         fields.put("signature", sign(fields));
         return fields;
     }
-
+ 
     /** Computes the PayFast signature for a field set (must NOT already contain a "signature" key). */
     public String sign(Map<String, String> fields) {
         StringBuilder sb = new StringBuilder();
@@ -76,7 +82,7 @@ public class PayFastService {
         }
         return md5Hex(sb.toString());
     }
-
+ 
     /**
      * Verifies an incoming ITN's signature. `postedFieldsInOrder` must preserve the exact order
      * the fields arrived in the raw POST body — see PaymentController for how that's parsed.
@@ -89,7 +95,7 @@ public class PayFastService {
         String expected = sign(withoutSignature);
         return expected.equalsIgnoreCase(given);
     }
-
+ 
     /**
      * PayFast's recommended second check: post the raw ITN body back to their own server and
      * confirm they echo "VALID". Protects against spoofed notifications even if the signature
@@ -110,12 +116,12 @@ public class PayFastService {
             return false;
         }
     }
-
+ 
     private static String urlEncode(String value) {
         // PayFast expects spaces as '+', which URLEncoder already does by default.
         return URLEncoder.encode(value, StandardCharsets.UTF_8);
     }
-
+ 
     private static String md5Hex(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
@@ -128,5 +134,3 @@ public class PayFastService {
         }
     }
 }
-
-

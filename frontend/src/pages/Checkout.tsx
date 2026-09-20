@@ -1,6 +1,13 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
-import { submitOrder, initPayFastPayment, redirectToPayFast, fetchStoreInfo, type StoreInfo } from "../api/client";
+import {
+  submitOrder,
+  initPayFastPayment,
+  redirectToPayFast,
+  fetchStoreInfo,
+  fetchShippingQuote,
+  type StoreInfo,
+} from "../api/client";
 import { useCart } from "../api/CartContext";
 import { formatZAR } from "../components/ProductCard";
 
@@ -9,21 +16,40 @@ const PROVINCES = [
   "Mpumalanga", "North West", "Northern Cape", "Western Cape",
 ];
 
-const SHIPPING_FEE = 0; // flat free shipping for now — wire up real courier rates later
-
 export default function Checkout() {
   const { cart, refresh } = useCart();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [storeInfo, setStoreInfo] = useState<StoreInfo | null>(null);
+  const [shippingFee, setShippingFee] = useState<number | null>(null);
 
   useEffect(() => {
     fetchStoreInfo().then(setStoreInfo).catch(() => {});
   }, []);
 
+  // Live shipping estimate — recalculated whenever the cart's contents change. The final
+  // charge is always the server's own calculation at checkout time, not this preview.
+  useEffect(() => {
+    if (!cart || cart.items.length === 0) {
+      setShippingFee(null);
+      return;
+    }
+    let cancelled = false;
+    fetchShippingQuote(cart.token)
+      .then((quote) => {
+        if (!cancelled) setShippingFee(quote.fee);
+      })
+      .catch(() => {
+        if (!cancelled) setShippingFee(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [cart?.token, cart?.items]);
+
   const items = cart?.items ?? [];
   const subtotal = parseFloat(String(cart?.total ?? "0"));
-  const total = subtotal + SHIPPING_FEE;
+  const total = shippingFee === null ? null : subtotal + shippingFee;
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -43,7 +69,7 @@ export default function Checkout() {
         city: String(form.get("city")),
         province: String(form.get("province")),
         postal_code: String(form.get("postal_code")),
-        shipping_fee: SHIPPING_FEE,
+        // No shipping_fee here — the backend computes it from the cart's real weight.
       });
       await refresh(); // backend cleared the cart; pull a fresh one
 
@@ -111,10 +137,14 @@ export default function Checkout() {
 
           <button
             type="submit"
-            disabled={submitting}
+            disabled={submitting || total === null}
             className="mt-2 justify-center bg-amber px-5 py-3 text-center font-display text-sm font-semibold text-navydeep transition-opacity hover:opacity-85 disabled:opacity-50"
           >
-            {submitting ? "Redirecting to PayFast…" : `Pay with PayFast — ${formatZAR(total)}`}
+            {submitting
+              ? "Redirecting to PayFast…"
+              : total === null
+                ? "Calculating shipping…"
+                : `Pay with PayFast — ${formatZAR(total)}`}
           </button>
         </form>
       </div>
@@ -132,12 +162,12 @@ export default function Checkout() {
           ))}
         </div>
         <div className="mt-4 flex justify-between border-t border-line pt-3 text-[13.5px] text-muted">
-          <span>Shipping</span>
-          <span>{SHIPPING_FEE === 0 ? "Free" : formatZAR(SHIPPING_FEE)}</span>
+          <span>Shipping (RAM)</span>
+          <span>{shippingFee === null ? "Calculating…" : formatZAR(shippingFee)}</span>
         </div>
         <div className="mt-2 flex justify-between border-t border-line pt-3 font-display text-base font-semibold">
           <span>Total</span>
-          <span>{formatZAR(total)}</span>
+          <span>{total === null ? "—" : formatZAR(total)}</span>
         </div>
         {storeInfo && (
           <p className="mt-3 text-xs text-muted">

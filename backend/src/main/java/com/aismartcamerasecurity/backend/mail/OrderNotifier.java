@@ -4,9 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.scheduling.annotation.Async;
 
 import com.aismartcamerasecurity.backend.orders.Order;
 import com.aismartcamerasecurity.backend.orders.OrderItem;
+
 
 import java.math.BigDecimal;
 
@@ -25,6 +27,7 @@ public class OrderNotifier {
 
     @Value("${store.prices-include-vat:true}")
     private boolean pricesIncludeVat;
+   
 
     public OrderNotifier(MailService mailService) {
         this.mailService = mailService;
@@ -36,7 +39,8 @@ public class OrderNotifier {
      * must never roll back or fail an otherwise-successful checkout. The order is the source
      * of truth; email is a courtesy on top of it. Failures are logged so they're not silent.
      */
-    public void notifyOrderPlaced(Order order) {
+    @Async("mailExecutor")
+public void notifyOrderPlaced(Order order) {
         try {
             mailService.send(order.getEmail(), "AI Smart Camera Security order confirmed — " + order.getReference(),
                     customerBody(order));
@@ -52,7 +56,8 @@ public class OrderNotifier {
     }
 
     /** Fired from the PayFast ITN webhook once payment actually clears. */
-    public void notifyPaymentConfirmed(Order order) {
+  @Async("mailExecutor")
+public void notifyPaymentConfirmed(Order order) {
         try {
             mailService.send(order.getEmail(), "Payment received — AI Smart Camera Security order " + order.getReference(),
                     "Thanks, " + order.getFullName() + ". We've received your payment for order "

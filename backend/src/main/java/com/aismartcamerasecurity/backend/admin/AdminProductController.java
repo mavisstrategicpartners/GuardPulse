@@ -21,42 +21,44 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/admin/products")
 public class AdminProductController {
-
+ 
     private final ProductRepository productRepository;
-
+ 
     @Value("${uploads.dir}")
     private String uploadsDir;
-
+ 
     public AdminProductController(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
-
+ 
     @GetMapping({"", "/"})
     public String list(Model model) {
         model.addAttribute("products", productRepository.findAllByOrderByNameAsc());
         return "admin/products";
     }
-
+ 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable Long id, Model model) {
         model.addAttribute("product", productRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
         return "admin/product-edit";
     }
-
+ 
     @PostMapping("/{id}")
     public String save(@PathVariable Long id,
                         @RequestParam BigDecimal price,
                         @RequestParam int stockQty,
+                        @RequestParam BigDecimal weightKg,
                         @RequestParam(defaultValue = "false") boolean active,
                         @RequestParam(required = false) MultipartFile image) throws IOException {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
+ 
         product.setPrice(price);
         product.setStockQty(stockQty);
+        product.setWeightKg(weightKg);
         product.setActive(active);
-
+ 
         if (image != null && !image.isEmpty()) {
             Path dir = Path.of(uploadsDir);
             Files.createDirectories(dir);
@@ -67,10 +69,9 @@ public class AdminProductController {
             Files.copy(image.getInputStream(), dir.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
             product.setImageUrl("/media/" + filename);
         }
-
+ 
         productRepository.save(product);
         return "redirect:/admin/products/" + id + "/edit";
     }
 }
-
-
+ 
