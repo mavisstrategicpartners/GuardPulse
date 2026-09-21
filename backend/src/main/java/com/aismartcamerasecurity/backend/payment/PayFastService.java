@@ -80,6 +80,12 @@ public class PayFastService {
         if (props.getPassphrase() != null && !props.getPassphrase().isBlank()) {
             sb.append("&passphrase=").append(urlEncode(props.getPassphrase().trim()));
         }
+        // TEMPORARY DIAGNOSTIC — remove once the signature issue is confirmed fixed.
+        // Prints the exact pre-hash string so we can compare it against what PayFast expects,
+        // instead of guessing further. Do NOT leave this logging real passphrases/merchant
+        // keys in a shared/public log long-term — remove after debugging.
+        log.info("PayFast pre-hash string: [{}]", sb);
+        log.info("PayFast resulting signature: {}", md5Hex(sb.toString()));
         return md5Hex(sb.toString());
     }
  
