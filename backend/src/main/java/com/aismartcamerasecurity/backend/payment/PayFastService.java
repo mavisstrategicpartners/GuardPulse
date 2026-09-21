@@ -61,7 +61,7 @@ public class PayFastService {
  
         fields.put("m_payment_id", order.getReference().toString());
         fields.put("amount", order.getTotal().setScale(2, java.math.RoundingMode.HALF_UP).toString());
-        fields.put("item_name", "Nightwatch order " + order.getReference());
+        fields.put("item_name", "Ai Smart Camera Security order " + order.getReference());
  
         fields.put("signature", sign(fields));
         return fields;
