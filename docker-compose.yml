@@ -2,13 +2,13 @@ services:
   db:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: nightwatch
-      POSTGRES_USER: nightwatch
+      POSTGRES_DB: guardpulse
+      POSTGRES_USER: guardpulse
       POSTGRES_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
     volumes:
       - db-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U nightwatch"]
+      test: ["CMD-SHELL", "pg_isready -U guardpulse"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -18,8 +18,8 @@ services:
     build: ./backend
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      DB_URL: jdbc:postgresql://db:5432/nightwatch
-      DB_USERNAME: nightwatch
+      DB_URL: jdbc:postgresql://db:5432/guardpulse
+DB_USERNAME: guardpulse
       DB_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
 
       ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}

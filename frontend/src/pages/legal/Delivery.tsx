@@ -27,8 +27,8 @@ export default function Delivery() {
       <h2 className="font-display text-lg font-semibold mt-3">Something wrong with delivery?</h2>
       <p>
         If your order hasn't arrived within the expected window, or arrived damaged, email{" "}
-        <a href="mailto:aismartcamerasecurity@gmail.com" className="text-amberdeep hover:underline">
-          aismartcamerasecurity@gmail.com
+        <a href="mailto:support@guardpulse.co.za" className="text-amberdeep hover:underline">
+          support@guardpulse.co.za
         </a>{" "}
         with your order reference and we'll sort it out.
       </p>

@@ -13,8 +13,8 @@ export default function Returns() {
         Because this is an online purchase, the Electronic Communications and Transactions Act
         gives you the right to cancel your order within <strong>7 days</strong> of receiving it,
         for any reason, without penalty. To use this right, email us at{" "}
-        <a href="mailto:aismartcamerasecurity@gmail.com" className="text-amberdeep hover:underline">
-          aismartcamerasecurity@gmail.com
+        <a href="mailto:support@guardpulse.co.za" className="text-amberdeep hover:underline">
+          support@guardpulse.co.za
         </a>{" "}
         within 7 days of delivery. The camera must be unused, in its original packaging, with all
         accessories included. We'll refund your purchase price within a reasonable time once we've
@@ -48,7 +48,7 @@ export default function Returns() {
 
       <h2 className="font-display text-lg font-semibold mt-3">How to start a return or claim</h2>
       <p>
-        Email <a href="mailto:aismartcamerasecurity@gmail.com" className="text-amberdeep hover:underline">aismartcamerasecurity@gmail.com</a>{" "}
+        Email <a href="mailto:support@guardpulse.co.za" className="text-amberdeep hover:underline">support@guardpulse.co.za</a>{" "}
         with your order reference (from your confirmation email), the item involved, and a short
         description of the issue. We aim to respond within 2 working days.
       </p>

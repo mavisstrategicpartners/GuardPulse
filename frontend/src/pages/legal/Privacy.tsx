@@ -4,7 +4,7 @@ export default function Privacy() {
   return (
     <LegalPage title="Privacy Policy" updated="September 2026">
       <p>
-        AI Smart Camera Security ("we", "us") respects your privacy and handles personal information in line
+        GuardPulse ("we", "us") respects your privacy and handles personal information in line
         with South Africa's Protection of Personal Information Act (POPIA). This policy explains
         what we collect, why, and what rights you have over it.
       </p>
@@ -50,8 +50,8 @@ export default function Privacy() {
       </ul>
       <p>
         To exercise any of these rights, contact our Information Officer at{" "}
-        <a href="mailto:aismartcamerasecurity@gmail.com" className="text-amberdeep hover:underline">
-         aismartcamerasecurity@gmail.com
+        <a href="mailto:support@guardpulse.co.za" className="text-amberdeep hover:underline">
+         support@guardpulse.co.za
         </a>.
       </p>
 

@@ -11,11 +11,11 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.aismartcamerasecurity</groupId>
-    <artifactId>backend</artifactId>
-    <version>0.1.0</version>
-    <name>ai-smart-camera-security-backend</name>
-    <description>AI Smart Camera Security API</description>
+   <groupId>com.guardpulse</groupId>
+<artifactId>guardpulse-backend</artifactId>
+<version>0.1.0</version>
+<name>GuardPulse Backend</name>
+<description>GuardPulse Security API</description>
 
     <properties>
         <java.version>21</java.version>
@@ -53,7 +53,7 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
-        <!-- Dev database: file-based H2 (zero setup, persists between restarts in ./data/nightwatch.mv.db)
+        <!-- Dev database: file-based H2 (zero setup, persists between restarts in ./data/guardpulse.mv.db)
              Production uses Postgres instead — see application-prod.properties and the two
              dependencies below, active via the "prod" Spring profile. -->
         <dependency>
@@ -92,11 +92,19 @@
     </dependencies>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+    <plugins>
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+        </plugin>
+
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+                <forkCount>0</forkCount>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
 </project>

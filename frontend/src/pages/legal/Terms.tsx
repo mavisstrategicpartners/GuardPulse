@@ -4,7 +4,7 @@ export default function Terms() {
   return (
     <LegalPage title="Terms of Service" updated="September 2026">
       <p>
-        These terms govern your use of the AI Smart Camera Security website and any purchase you make through
+        These terms govern your use of the GuardPulse website and any purchase you make through
         it. By placing an order, you agree to them.
       </p>
 
@@ -57,8 +57,8 @@ export default function Terms() {
       <h2 className="font-display text-lg font-semibold mt-3">Contact</h2>
       <p>
         Questions about these terms can be sent to{" "}
-        <a href="mailto:aismartcamerasecurity@gmail.com" className="text-amberdeep hover:underline">
-          aismartcamerasecurity@gmail.com
+        <a href="support@guardpulse.co.za" className="text-amberdeep hover:underline">
+          support@guardpulse.co.za
         </a>.
       </p>
 

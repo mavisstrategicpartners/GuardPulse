@@ -44,7 +44,7 @@ export async function fetchProduct(slug: string): Promise<ProductDetail> {
 
 // ---- Cart ----
 
-const CART_TOKEN_KEY = "ai_smart_camera_security_cart_token";
+const CART_TOKEN_KEY = "guardpulse_cart_token";
 
 export function getStoredCartToken(): string | null {
   return localStorage.getItem(CART_TOKEN_KEY);

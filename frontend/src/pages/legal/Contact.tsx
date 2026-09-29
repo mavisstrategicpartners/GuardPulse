@@ -14,15 +14,15 @@ export default function Contact() {
 
       <h2 className="font-display text-lg font-semibold mt-3">Returns & warranty claims</h2>
       <p>
-        <a href="mailto:aismartcamerasecurity@gmail.com" className="text-amberdeep hover:underline">
-          aismartcamerasecurity@gmail.com
+        <a href="mailto:support@guardpulse.co.za" className="text-amberdeep hover:underline">
+          support@guardpulse.co.za
         </a>
       </p>
 
       <h2 className="font-display text-lg font-semibold mt-3">Privacy requests</h2>
       <p>
-        <a href="mailto:aismartcamerasecurity@gmail.com" className="text-amberdeep hover:underline">
-          aismartcamerasecurity@gmail.com
+        <a href="mailto:support@guardpulse.co.za" className="text-amberdeep hover:underline">
+          support@guardpulse.co.za
         </a>
       </p>
 

@@ -31,7 +31,7 @@ export default function Header() {
             <circle cx="13" cy="13" r="10" fill="none" stroke="var(--color-amberdeep)" strokeWidth="1.6" />
             <circle cx="13" cy="13" r="3" fill="var(--color-amberdeep)" />
           </svg>
-          <span className="font-display text-xl font-bold tracking-tight text-ink">AI Smart Camera Security</span>
+          <span className="font-display text-xl font-bold tracking-tight text-ink">GuardPulse</span>
         </Link>
 
         <nav className="hidden gap-7 md:flex">

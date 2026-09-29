@@ -1,4 +1,4 @@
-#  GuardPulse
+#  AI-Smart-Camera-Security
 
 A security-camera e-commerce store for the South African market: React + TypeScript + Vite
 frontend, Spring Boot (Java) backend, PayFast payments, Postgres in production. Catalog is
@@ -171,7 +171,7 @@ a substitute for an actual lawyer's review — see below.
   but a lawyer/POPIA consultant should review them before real customers order, and you
   need an actual registered Information Officer with the Information Regulator (referenced
   on the Privacy page).
-- **The store name** — still literally "Nightwatch," pending your final choice.
+- **The store name** — GuardPulse.
 #   A I - S m a r t - C a m e r a - S e c u r i t y 
  
  

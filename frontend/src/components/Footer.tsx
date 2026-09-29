@@ -21,7 +21,7 @@ export default function Footer() {
     <footer className="mt-10 bg-navydeep text-[#9E9788]">
       <div className="mx-auto grid max-w-6xl gap-8 px-6 py-11 md:grid-cols-[1.4fr_1fr_1fr]">
         <div>
-          <span className="font-display text-lg font-bold text-paper">AI Smart Camera Security</span>
+          <span className="font-display text-lg font-bold text-paper">GuardPulse</span>
           <p className="mt-2.5 max-w-[280px] text-[13px] leading-relaxed">
             Security cameras for South African homes — chosen, tested and shipped locally.
           </p>
@@ -44,7 +44,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="border-t border-[#2A3548] p-4 text-center text-xs">
-        © {new Date().getFullYear()} AI Smart Camera Security · nationwide delivery across South Africa
+        © {new Date().getFullYear()} GuardPulse · nationwide delivery across South Africa
       </div>
     </footer>
   );

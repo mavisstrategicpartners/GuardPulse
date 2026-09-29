@@ -2,12 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>AI Smart Camera Security admin — log in</title>
+    <title>GuardPulse admin — log in</title>
     <th:block th:replace="admin/fragments :: styles"></th:block>
 </head>
 <body>
     <div class="login-box">
-        <h1 style="font-size:20px;">AI Smart Camera Security admin</h1>
+        <h1 style="font-size:20px;">GuardPulse admin</h1>
         <p th:if="${param.error}" class="error-msg">Incorrect username or password.</p>
         <p th:if="${param.logout}" class="muted" style="margin-bottom:16px;">You've been logged out.</p>
         <form method="post" action="/admin/login">
