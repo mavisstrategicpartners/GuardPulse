@@ -1,4 +1,4 @@
-#  AI-Smart-Camera-Security
+#  GuardPulse
 
 A security-camera e-commerce store for the South African market: React + TypeScript + Vite
 frontend, Spring Boot (Java) backend, PayFast payments, Postgres in production. Catalog is
@@ -7,7 +7,7 @@ extracted from those same supplier docs.
 
 
 ```
- AI-Smart-Camera-Security/
+ GuardPulse/
 ├── backend/     Spring Boot API — catalog, cart, checkout, PayFast, email, admin back-office
 ├── frontend/    React + TypeScript + Vite storefront
 ├── deploy/      Caddy config + edge Dockerfile for the HTTPS deployment
