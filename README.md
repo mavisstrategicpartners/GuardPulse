@@ -1,4 +1,4 @@
-#  AI-Smart-Camera-Security
+#  GuardPulse
 
 A security-camera e-commerce store for the South African market: React + TypeScript + Vite
 frontend, Spring Boot (Java) backend, PayFast payments, Postgres in production. Catalog is
