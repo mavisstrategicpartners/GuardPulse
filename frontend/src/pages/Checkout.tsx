@@ -1,13 +1,16 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   submitOrder,
   initPayFastPayment,
   redirectToPayFast,
   fetchStoreInfo,
   fetchShippingQuote,
+  errorMessage,
   type StoreInfo,
 } from "../api/client";
+import type { Order } from "../types";
+import { useAuth } from "../api/AuthContext";
 import { useCart } from "../api/CartContext";
 import { formatZAR } from "../components/ProductCard";
 
@@ -18,6 +21,8 @@ const PROVINCES = [
 
 export default function Checkout() {
   const { cart, refresh } = useCart();
+  const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [storeInfo, setStoreInfo] = useState<StoreInfo | null>(null);
@@ -58,8 +63,11 @@ export default function Checkout() {
     setError(null);
 
     const form = new FormData(e.currentTarget);
+
+    // Step 1: create the order (this reserves the stock).
+    let order: Order;
     try {
-      const order = await submitOrder({
+      order = await submitOrder({
         cart_token: cart.token,
         full_name: String(form.get("full_name")),
         email: String(form.get("email")),
@@ -71,15 +79,32 @@ export default function Checkout() {
         postal_code: String(form.get("postal_code")),
         // No shipping_fee here — the backend computes it from the cart's real weight.
       });
-      await refresh(); // backend cleared the cart; pull a fresh one
+    } catch (err) {
+      setError(errorMessage(err, "We couldn't place that order. Check the fields and try again."));
+      setSubmitting(false);
+      return;
+    }
 
-      // Hand off to PayFast — this navigates the browser away, so nothing after this runs.
+    // The backend emptied the cart; pull a fresh one. A hiccup here must not block payment.
+    try {
+      await refresh();
+    } catch {
+      // ignore
+    }
+
+    // Step 2: hand off to PayFast — this navigates the browser away.
+    try {
       const payfastInit = await initPayFastPayment(order.reference);
       redirectToPayFast(payfastInit);
     } catch {
-      setError("We couldn't place that order. Check the fields and try again.");
-      setSubmitting(false);
+      // The order exists, so don't ask them to fill the form in again (that would create a duplicate
+      // order). Send them to the order page, which has a "Pay now" button.
+      navigate(`/order/${order.reference}`);
     }
+  }
+
+  if (authLoading) {
+    return <p className="px-6 py-20 text-center text-sm text-muted">Loading…</p>;
   }
 
   if (items.length === 0) {
@@ -97,12 +122,23 @@ export default function Checkout() {
   return (
     <div className="mx-auto grid max-w-5xl gap-10 px-6 py-14 md:grid-cols-[1.3fr_1fr]">
       <div>
-        <h1 className="mb-6 font-display text-2xl font-semibold">Delivery details</h1>
-        <form id="checkout-form" onSubmit={handleSubmit} className="grid gap-4">
-          <Field label="Full name" name="full_name" required />
+        <h1 className="mb-2 font-display text-2xl font-semibold">Delivery details</h1>
+        {user ? (
+          <p className="mb-6 text-sm text-muted">Checking out as {user.email}. This order will appear in your account.</p>
+        ) : (
+          <p className="mb-6 text-sm text-muted">
+            Have an account?{" "}
+            <Link to="/login" state={{ from: "/checkout" }} className="text-amberdeep hover:underline">
+              Log in
+            </Link>{" "}
+            to fill in your details and keep track of this order — or just carry on as a guest.
+          </p>
+        )}
+        <form id="checkout-form" key={user?.id ?? "guest"} onSubmit={handleSubmit} className="grid gap-4">
+          <Field label="Full name" name="full_name" required defaultValue={user?.full_name} />
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Email" name="email" type="email" required />
-            <Field label="Phone" name="phone" type="tel" required />
+            <Field label="Email" name="email" type="email" required defaultValue={user?.email} />
+            <Field label="Phone" name="phone" type="tel" required defaultValue={user?.phone ?? undefined} />
           </div>
           <Field label="Address line 1" name="address_line1" required />
           <Field label="Address line 2 (optional)" name="address_line2" />
@@ -187,11 +223,13 @@ function Field({
   name,
   type = "text",
   required = false,
+  defaultValue,
 }: {
   label: string;
   name: string;
   type?: string;
   required?: boolean;
+  defaultValue?: string;
 }) {
   return (
     <div>
@@ -200,6 +238,7 @@ function Field({
         name={name}
         type={type}
         required={required}
+        defaultValue={defaultValue}
         className="w-full border border-line bg-card px-3 py-2.5 text-sm"
       />
     </div>

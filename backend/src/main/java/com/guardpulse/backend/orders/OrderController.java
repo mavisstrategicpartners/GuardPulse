@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.guardpulse.backend.customer.AuthService;
+import com.guardpulse.backend.customer.Customer;
 import com.guardpulse.backend.mail.OrderNotifier;
 import com.guardpulse.backend.orders.dto.CheckoutRequest;
 import com.guardpulse.backend.orders.dto.OrderDto;
@@ -25,18 +27,23 @@ public class OrderController {
     private final CartRepository cartRepository;
     private final OrderNotifier orderNotifier;
     private final ShippingService shippingService;
+    private final AuthService authService;
  
     public OrderController(OrderRepository orderRepository, CartRepository cartRepository,
-                            OrderNotifier orderNotifier, ShippingService shippingService) {
+                            OrderNotifier orderNotifier, ShippingService shippingService,
+                            AuthService authService) {
         this.orderRepository = orderRepository;
         this.cartRepository = cartRepository;
         this.orderNotifier = orderNotifier;
         this.shippingService = shippingService;
+        this.authService = authService;
     }
  
     @PostMapping({"", "/"})
     @Transactional
-    public ResponseEntity<OrderDto> checkout(@Valid @RequestBody CheckoutRequest request) {
+    public ResponseEntity<OrderDto> checkout(
+            @Valid @RequestBody CheckoutRequest request,
+            @RequestHeader(value = "Authorization", required = false) String authorization) {
         Cart cart;
         try {
             cart = cartRepository.findByToken(UUID.fromString(request.cartToken))
@@ -71,6 +78,10 @@ public class OrderController {
             throw new ResponseStatusException(HttpStatus.CONFLICT, outOfStock.getMessage());
         }
         order.recalculateTotal();
+
+        // Logged-in shoppers get the order attached to their account (guests still check out as before).
+        Customer customer = authService.resolve(authorization).orElse(null);
+        order.setCustomer(customer);
  
         try {
             orderRepository.saveAndFlush(order);
@@ -119,4 +130,3 @@ public class OrderController {
         return OrderDto.from(order);
     }
 }
- 

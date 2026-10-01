@@ -1,22 +1,63 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { fetchOrder } from "../api/client";
+import { fetchOrder, initPayFastPayment, redirectToPayFast } from "../api/client";
 import type { Order } from "../types";
 import { formatZAR } from "../components/ProductCard";
+
+const POLL_EVERY_MS = 4000;
+const MAX_POLLS = 45; // about 3 minutes of waiting for PayFast to confirm
 
 export default function OrderConfirmation() {
   const { reference } = useParams<{ reference: string }>();
   const [order, setOrder] = useState<Order | null>(null);
   const [error, setError] = useState(false);
+  const [paying, setPaying] = useState(false);
+  const [payError, setPayError] = useState<string | null>(null);
 
+  // Load the order, and while it is still waiting for payment keep checking: PayFast confirms the
+  // payment to our server a few seconds after the customer returns, and this page should show that.
   useEffect(() => {
     if (!reference) return;
-    fetchOrder(reference)
-      .then(setOrder)
-      .catch(() => setError(true));
+    let cancelled = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let polls = 0;
+
+    async function load() {
+      try {
+        const o = await fetchOrder(reference!);
+        if (cancelled) return;
+        setOrder(o);
+        setError(false);
+        if (o.status === "pending" && polls < MAX_POLLS) {
+          polls += 1;
+          timer = setTimeout(load, POLL_EVERY_MS);
+        }
+      } catch {
+        if (!cancelled) setError(true);
+      }
+    }
+    load();
+
+    return () => {
+      cancelled = true;
+      if (timer) clearTimeout(timer);
+    };
   }, [reference]);
 
-  if (error) {
+  async function payNow() {
+    if (!order) return;
+    setPaying(true);
+    setPayError(null);
+    try {
+      const init = await initPayFastPayment(order.reference);
+      redirectToPayFast(init);
+    } catch {
+      setPayError("We couldn't reach PayFast just now. Please try again in a moment.");
+      setPaying(false);
+    }
+  }
+
+  if (error && !order) {
     return (
       <div className="mx-auto max-w-lg px-6 py-20 text-center">
         <h1 className="mb-3 font-display text-2xl font-semibold">Order not found</h1>
@@ -31,8 +72,8 @@ export default function OrderConfirmation() {
 
   const statusCopy: Record<string, { label: string; note: string }> = {
     pending: {
-      label: "Payment processing",
-      note: "We're waiting for PayFast to confirm your payment — this page will update shortly. Refresh if it's been a few minutes.",
+      label: "Waiting for payment",
+      note: "If you've just paid, we're waiting for PayFast to confirm it — this page updates by itself. If you didn't finish paying, you can complete your payment below.",
     },
     paid: { label: "Payment received", note: `We'll email ${order.email} again once it ships.` },
     shipped: { label: "On its way", note: `Shipped to you — we'll follow up with tracking at ${order.email}.` },
@@ -48,6 +89,19 @@ export default function OrderConfirmation() {
       <p className="mb-8 text-sm text-muted">
         Reference <span className="font-mono">{order.reference}</span> · {status.note}
       </p>
+
+      {order.status === "pending" && (
+        <div className="mb-8 border border-line bg-card p-5">
+          <button
+            onClick={payNow}
+            disabled={paying}
+            className="w-full justify-center bg-amber px-5 py-3 text-center font-display text-sm font-semibold text-navydeep transition-opacity hover:opacity-85 disabled:opacity-50"
+          >
+            {paying ? "Redirecting to PayFast…" : `Pay now with PayFast — ${formatZAR(order.total)}`}
+          </button>
+          {payError && <p className="mt-3 text-sm text-red-700">{payError}</p>}
+        </div>
+      )}
 
       <div className="border border-line bg-card p-6">
         {order.items.map((item, i) => (

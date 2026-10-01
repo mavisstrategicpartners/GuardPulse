@@ -29,6 +29,8 @@ public class RateLimitFilter extends OncePerRequestFilter {
     @Value("${ratelimit.requests-per-minute:60}")
     private int limitPerMinute;
 
+    private static final int AUTH_LIMIT_PER_MINUTE = 20;
+
     private record Window(AtomicInteger count, long windowStartEpochSecond) {}
 
     private final ConcurrentHashMap<String, Window> windows = new ConcurrentHashMap<>();
@@ -37,14 +39,17 @@ public class RateLimitFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
         boolean limited = path.startsWith("/api/cart") || path.startsWith("/api/orders")
-                || path.startsWith("/api/payments");
+                || path.startsWith("/api/payments") || path.startsWith("/api/auth");
         return !limited;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        String ip = clientIp(request);
+        // Login/register get a much tighter budget (and their own counter) to slow down password guessing.
+        boolean authPath = request.getRequestURI().startsWith("/api/auth");
+        int limit = authPath ? Math.min(limitPerMinute, AUTH_LIMIT_PER_MINUTE) : limitPerMinute;
+        String ip = clientIp(request) + (authPath ? "|auth" : "");
         long nowSecond = Instant.now().getEpochSecond();
         long currentWindow = nowSecond / 60;
 
@@ -56,7 +61,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
         });
 
         int count = window.count().incrementAndGet();
-        if (count > limitPerMinute) {
+        if (count > limit) {
             response.setStatus(429); // Too Many Requests
             response.setContentType("application/json");
             response.getWriter().write("{\"error\":\"Too many requests — please slow down and try again shortly.\"}");
@@ -79,5 +84,3 @@ public class RateLimitFilter extends OncePerRequestFilter {
         return request.getRemoteAddr();
     }
 }
-
-

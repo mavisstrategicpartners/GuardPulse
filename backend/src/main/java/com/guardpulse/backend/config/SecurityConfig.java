@@ -78,7 +78,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/**").permitAll()
                 .requestMatchers("/media/**").permitAll()
                 .requestMatchers("/products/**").permitAll()
-                .requestMatchers("/h2-console/**").permitAll() // dev-only — see README before shipping to production
+                .requestMatchers("/h2-console/**").hasRole("ADMIN") // dev-only, and off by default (see H2_CONSOLE_ENABLED)
                 .requestMatchers("/admin/login").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().permitAll()
@@ -96,5 +96,3 @@ public class SecurityConfig {
         return http.build();
     }
 }
-
-

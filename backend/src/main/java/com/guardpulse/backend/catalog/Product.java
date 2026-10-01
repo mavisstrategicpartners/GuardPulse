@@ -97,6 +97,19 @@ public class Product {
         stockQty -= quantity;
     }
  
+    /**
+     * Replaces the customer-facing wording (tagline, description and the "what it can do" lines)
+     * without touching price, stock or anything else the admin manages.
+     */
+    public void updateContent(String tagline, String description, List<String> specTexts) {
+        this.tagline = tagline;
+        this.description = description;
+        this.specs.clear();
+        for (String text : specTexts) {
+            this.specs.add(new ProductSpec(this, text));
+        }
+    }
+
     public void setPrice(BigDecimal price) { this.price = price; }
     public void setStockQty(int stockQty) { this.stockQty = stockQty; }
     public void setActive(boolean active) { this.active = active; }
@@ -119,4 +132,3 @@ public class Product {
     public String getImageUrl() { return imageUrl; }
     public List<ProductSpec> getSpecs() { return specs; }
 }
- 

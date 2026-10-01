@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Customers — GuardPulse admin</title>
+    <th:block th:replace="admin/fragments :: styles"></th:block>
+</head>
+<body>
+    <div th:replace="admin/fragments :: nav('customers')"></div>
+    <div class="wrap">
+        <h1>Customers</h1>
+        <p th:if="${param.deleted}" class="notice">Account deleted. Their past orders were kept.</p>
+        <p class="muted" style="margin-bottom:14px;">
+            Shoppers who registered an account. Deleting an account logs the person out straight away
+            and removes their login; their past orders stay in <a href="/admin/orders">Orders</a>.
+        </p>
+        <table>
+            <tr><th>Name</th><th>Email</th><th>Phone</th><th>Registered</th><th>Orders</th><th></th></tr>
+            <tr th:each="row : ${rows}">
+                <td th:text="${row.customer.fullName}"></td>
+                <td th:text="${row.customer.email}"></td>
+                <td th:text="${row.customer.phone} ?: '—'"></td>
+                <td th:text="${row.registeredOn}"></td>
+                <td th:text="${row.orderCount}"></td>
+                <td>
+                    <form method="post" th:action="@{'/admin/customers/' + ${row.customer.id} + '/delete'}"
+                          onsubmit="return confirm('Delete this customer account? They will be logged out immediately. Their past orders are kept. This cannot be undone.');">
+                        <button type="submit" class="danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${rows.isEmpty()}"><td colspan="6" class="muted">No customers have registered yet.</td></tr>
+        </table>
+    </div>
+</body>
+</html>

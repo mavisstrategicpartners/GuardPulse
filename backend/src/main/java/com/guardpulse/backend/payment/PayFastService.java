@@ -4,7 +4,8 @@ import com.guardpulse.backend.orders.Order;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
- 
+
+import java.math.RoundingMode;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
@@ -17,112 +18,141 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Builds the field set PayFast expects for a payment redirect, and validates the signature
- * on incoming ITN (Instant Transaction Notification) webhooks.
+ * Builds the signed field set for the PayFast payment redirect, and verifies the
+ * Instant Transaction Notification (ITN) PayFast sends back.
  *
- * Reference: https://developers.payfast.co.za/docs — the signature algorithm and the
- * "post back to PayFast to confirm" validation step are both exactly as documented there.
- * PayFast's API has changed field names/requirements before; if this integration starts
- * rejecting payments, that documentation page is the first thing to re-check.
+ * IMPORTANT — the two signatures are built differently (per PayFast's documentation):
+ *  - OUTGOING payment form: blank fields are left out, values are trimmed.
+ *  - INCOMING ITN: EVERY posted field is included in the order received, including the many
+ *    that arrive blank (custom_str1..5, custom_int1..5, item_description ...). Skipping the
+ *    blanks here makes every genuine ITN fail verification, so orders never become PAID.
  */
 @Service
 public class PayFastService {
- 
+
     private static final Logger log = LoggerFactory.getLogger(PayFastService.class);
- 
+
     private final PayFastProperties props;
     private final HttpClient httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
- 
+
     public PayFastService(PayFastProperties props) {
         this.props = props;
     }
- 
+
+    // ------------------------------------------------------------ outgoing payment
+
     /** Builds the full field set (including signature) to redirect the customer to PayFast with. */
     public Map<String, String> buildPaymentFields(Order order) {
-        // LinkedHashMap: PayFast's signature is order-sensitive, so field insertion order matters.
+        // LinkedHashMap: PayFast's signature depends on field order, which must match the documented order.
         Map<String, String> fields = new LinkedHashMap<>();
-        fields.put("merchant_id", props.getMerchantId());
-        fields.put("merchant_key", props.getMerchantKey());
-        fields.put("return_url", props.getReturnUrl() + "/" + order.getReference());
-        fields.put("cancel_url", props.getCancelUrl() + "/" + order.getReference());
-        fields.put("notify_url", props.getNotifyUrl());
- 
+        put(fields, "merchant_id", props.getMerchantId());
+        put(fields, "merchant_key", props.getMerchantKey());
+        put(fields, "return_url", props.getReturnUrl() + "/" + order.getReference());
+        put(fields, "cancel_url", props.getCancelUrl() + "/" + order.getReference());
+        put(fields, "notify_url", props.getNotifyUrl());
+
         String[] names = order.getFullName().trim().split("\\s+", 2);
-        fields.put("name_first", names[0]);
-        // Only include name_last when there actually is one — sending it as an empty string
-        // caused an intermittent signature mismatch for single-word names, because PayFast's
-        // own signature check doesn't necessarily skip blank fields the same way ours does.
-        // Omitting the field entirely removes the ambiguity rather than relying on both sides
-        // agreeing on how to treat blanks.
-        if (names.length > 1 && !names[1].isBlank()) {
-            fields.put("name_last", names[1]);
+        put(fields, "name_first", truncate(names[0], 100));
+        if (names.length > 1) {
+            put(fields, "name_last", truncate(names[1], 100)); // skipped automatically if blank
         }
-        fields.put("email_address", order.getEmail());
- 
-        fields.put("m_payment_id", order.getReference().toString());
-        fields.put("amount", order.getTotal().setScale(2, java.math.RoundingMode.HALF_UP).toString());
-        fields.put("item_name", "GuardPulse order " + order.getReference());
- 
-        fields.put("signature", sign(fields));
+        put(fields, "email_address", order.getEmail());
+
+        put(fields, "m_payment_id", order.getReference().toString());
+        put(fields, "amount", order.getTotal().setScale(2, RoundingMode.HALF_UP).toPlainString());
+        put(fields, "item_name", "GuardPulse order " + order.getReference());
+
+        fields.put("signature", signOutgoing(fields));
         return fields;
     }
- 
-    /** Computes the PayFast signature for a field set (must NOT already contain a "signature" key). */
-    public String sign(Map<String, String> fields) {
+
+    /** Adds a field only if it has a value, trimmed — so what we sign is exactly what the browser posts. */
+    private static void put(Map<String, String> fields, String key, String value) {
+        if (value == null) return;
+        String trimmed = value.trim();
+        if (!trimmed.isEmpty()) fields.put(key, trimmed);
+    }
+
+    /** Signature for the outgoing payment form (must NOT already contain a "signature" key). */
+    public String signOutgoing(Map<String, String> fields) {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, String> entry : fields.entrySet()) {
             if (entry.getKey().equals("signature")) continue;
             String value = entry.getValue() == null ? "" : entry.getValue().trim();
-            if (value.isEmpty()) continue; // PayFast: omit empty fields from the signature string
+            if (value.isEmpty()) continue;
             if (!sb.isEmpty()) sb.append('&');
             sb.append(entry.getKey()).append('=').append(urlEncode(value));
         }
-        if (props.getPassphrase() != null && !props.getPassphrase().isBlank()) {
-            sb.append("&passphrase=").append(urlEncode(props.getPassphrase().trim()));
-        }
-       
-        return md5Hex(sb.toString());
+        return md5Hex(withPassphrase(sb.toString()));
     }
- 
+
+    // ------------------------------------------------------------ incoming ITN
+
     /**
-     * Verifies an incoming ITN's signature. `postedFieldsInOrder` must preserve the exact order
-     * the fields arrived in the raw POST body — see PaymentController for how that's parsed.
+     * The parameter string PayFast signs for an ITN: every posted field except "signature",
+     * in the order received, blanks included, values url-encoded.
      */
+    public String itnParamString(Map<String, String> postedFieldsInOrder) {
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, String> entry : postedFieldsInOrder.entrySet()) {
+            if (entry.getKey().equals("signature")) continue;
+            if (!sb.isEmpty()) sb.append('&');
+            sb.append(entry.getKey()).append('=').append(urlEncode(entry.getValue() == null ? "" : entry.getValue()));
+        }
+        return sb.toString();
+    }
+
+    /** Verifies an incoming ITN's signature. The map must preserve the order the fields arrived in. */
     public boolean verifyItnSignature(Map<String, String> postedFieldsInOrder) {
         String given = postedFieldsInOrder.get("signature");
         if (given == null) return false;
-        Map<String, String> withoutSignature = new LinkedHashMap<>(postedFieldsInOrder);
-        withoutSignature.remove("signature");
-        String expected = sign(withoutSignature);
-        return expected.equalsIgnoreCase(given);
+        String expected = md5Hex(withPassphrase(itnParamString(postedFieldsInOrder)));
+        return expected.equalsIgnoreCase(given.trim());
     }
- 
+
     /**
-     * PayFast's recommended second check: post the raw ITN body back to their own server and
-     * confirm they echo "VALID". Protects against spoofed notifications even if the signature
-     * check above were somehow bypassed. Network failures are treated as "not valid" — fail closed.
+     * PayFast's second check: post the parameter string back to PayFast and confirm they answer
+     * "VALID". Network failures are treated as "not valid" (fail closed) — PayFast retries ITNs.
      */
-    public boolean confirmWithPayFast(String rawBody) {
+    public boolean confirmWithPayFast(String paramString) {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("https://" + props.getValidateHost() + "/eng/query/validate"))
                     .header("Content-Type", "application/x-www-form-urlencoded")
-                    .POST(HttpRequest.BodyPublishers.ofString(rawBody))
+                    .POST(HttpRequest.BodyPublishers.ofString(paramString))
                     .timeout(Duration.ofSeconds(10))
                     .build();
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            return "VALID".equalsIgnoreCase(response.body().trim());
+            boolean valid = "VALID".equalsIgnoreCase(response.body().trim());
+            if (!valid) {
+                log.warn("PayFast validate endpoint answered '{}' (HTTP {})", response.body().trim(), response.statusCode());
+            }
+            return valid;
         } catch (Exception e) {
             log.error("PayFast server-side ITN validation call failed", e);
             return false;
         }
     }
- 
-    private static String urlEncode(String value) {
-        // PayFast expects spaces as '+', which URLEncoder already does by default.
-        return URLEncoder.encode(value, StandardCharsets.UTF_8);
+
+    // ------------------------------------------------------------ helpers
+
+    private String withPassphrase(String paramString) {
+        String passphrase = props.getPassphrase();
+        if (passphrase != null && !passphrase.isBlank()) {
+            return paramString + "&passphrase=" + urlEncode(passphrase.trim());
+        }
+        return paramString;
     }
- 
+
+    private static String truncate(String value, int max) {
+        return value.length() <= max ? value : value.substring(0, max);
+    }
+
+    /** Matches PHP's urlencode(), which PayFast's signature is defined against: spaces as '+', '*' as %2A. */
+    static String urlEncode(String value) {
+        return URLEncoder.encode(value, StandardCharsets.UTF_8).replace("*", "%2A");
+    }
+
     private static String md5Hex(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");

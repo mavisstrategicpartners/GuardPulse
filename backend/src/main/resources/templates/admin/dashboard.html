@@ -16,8 +16,12 @@
                 <div class="value" th:text="${orderCount}">0</div>
             </div>
             <div class="stat">
-                <div class="label">Revenue (all orders)</div>
+                <div class="label">Revenue (paid orders)</div>
                 <div class="value" th:text="'R' + ${#numbers.formatDecimal(revenue, 1, 0)}">R0</div>
+            </div>
+            <div class="stat">
+                <div class="label">Registered customers</div>
+                <div class="value" th:text="${customerCount}">0</div>
             </div>
             <div class="stat">
                 <div class="label">Products low on stock (&lt;5)</div>
@@ -53,4 +57,3 @@
     </div>
 </body>
 </html>
-

@@ -8,6 +8,7 @@ const SHOP_LINKS: { label: string; to: string }[] = [
 ];
 
 const SUPPORT_LINKS: { label: string; to: string }[] = [
+  { label: "My account", to: "/account" },
   { label: "Track your order", to: "/track-order" },
   { label: "Warranty & returns", to: "/returns" },
   { label: "Delivery info", to: "/delivery" },

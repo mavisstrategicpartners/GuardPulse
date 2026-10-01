@@ -7,11 +7,10 @@ import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> findBySlugAndActiveTrue(String slug);
+    Optional<Product> findBySlug(String slug); // includes inactive products
 
     List<Product> findAllByActiveTrueOrderByNameAsc();
     List<Product> findAllByActiveTrueAndCategory_KeyOrderByNameAsc(String categoryKey);
     List<Product> findAllByActiveTrueAndBundleTrueOrderByNameAsc();
     List<Product> findAllByOrderByNameAsc(); // admin views need inactive products too
 }
-
-

@@ -1,5 +1,8 @@
 package com.guardpulse.backend.payment;
 
+import com.guardpulse.backend.mail.OrderNotifier;
+import com.guardpulse.backend.orders.Order;
+import com.guardpulse.backend.orders.OrderRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,10 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import com.guardpulse.backend.mail.OrderNotifier;
-import com.guardpulse.backend.orders.Order;
-import com.guardpulse.backend.orders.OrderRepository;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,7 +41,7 @@ public class PaymentController {
 
     public record PayFastInitDto(String processUrl, Map<String, String> fields) {}
 
-    /** Frontend calls this right after checkout to get the fields it needs to redirect the customer to PayFast. */
+    /** Frontend calls this to get the fields it needs to redirect the customer to PayFast. Safe to call again to retry payment. */
     @GetMapping("/{reference}/")
     public PayFastInitDto init(@PathVariable String reference) {
         Order order = findOrder(reference);
@@ -53,8 +52,9 @@ public class PaymentController {
     }
 
     /**
-     * PayFast calls this server-to-server once payment completes — never trust the customer's
-     * browser redirect alone for marking an order paid, only this webhook.
+     * PayFast calls this server-to-server once payment completes — only this webhook (never the
+     * customer's browser redirect) marks an order paid. Anything other than a plain 200 makes
+     * PayFast retry, so "not for us / nothing to do" cases answer 200 and real failures answer 400.
      */
     @PostMapping("/itn")
     public ResponseEntity<String> handleItn(HttpServletRequest request) throws IOException {
@@ -62,35 +62,62 @@ public class PaymentController {
         Map<String, String> fields = parseFormBodyPreservingOrder(rawBody);
 
         if (!payFastService.verifyItnSignature(fields)) {
-            log.warn("PayFast ITN signature mismatch, ignoring. Fields: {}", fields.keySet());
+            log.warn("PayFast ITN signature mismatch, ignoring. Fields received: {}", fields.keySet());
             return ResponseEntity.badRequest().body("invalid signature");
         }
-        if (!payFastService.confirmWithPayFast(rawBody)) {
-            log.warn("PayFast server-side ITN confirmation failed, ignoring notification for {}",
-                    fields.get("m_payment_id"));
+
+        String merchantId = fields.get("merchant_id");
+        if (merchantId != null && !merchantId.isBlank() && !merchantId.equals(payFastProperties.getMerchantId())) {
+            log.warn("PayFast ITN for a different merchant id ({}), ignoring", merchantId);
+            return ResponseEntity.badRequest().body("wrong merchant");
+        }
+
+        if (!payFastService.confirmWithPayFast(payFastService.itnParamString(fields))) {
+            log.warn("PayFast server-side ITN confirmation failed for {}", fields.get("m_payment_id"));
             return ResponseEntity.badRequest().body("could not confirm with payfast");
         }
 
-        String paymentStatus = fields.get("payment_status");
         String reference = fields.get("m_payment_id");
-        Order order = orderRepository.findByReference(UUID.fromString(reference)).orElse(null);
+        Order order = null;
+        try {
+            if (reference != null) {
+                order = orderRepository.findByReference(UUID.fromString(reference)).orElse(null);
+            }
+        } catch (IllegalArgumentException notAUuid) {
+            // fall through to "unknown order"
+        }
         if (order == null) {
             log.warn("PayFast ITN for unknown order reference {}", reference);
             return ResponseEntity.ok("order not found, ignored");
         }
 
-        BigDecimal notifiedAmount = new BigDecimal(fields.getOrDefault("amount_gross", fields.get("amount")));
+        String grossText = fields.getOrDefault("amount_gross", fields.get("amount"));
+        BigDecimal notifiedAmount;
+        try {
+            notifiedAmount = new BigDecimal(grossText.trim());
+        } catch (RuntimeException badAmount) {
+            log.warn("PayFast ITN for order {} had an unreadable amount: {}", reference, grossText);
+            return ResponseEntity.badRequest().body("bad amount");
+        }
         if (notifiedAmount.compareTo(order.getTotal()) != 0) {
             log.warn("PayFast ITN amount mismatch for order {}: expected {}, got {}",
                     reference, order.getTotal(), notifiedAmount);
             return ResponseEntity.badRequest().body("amount mismatch");
         }
 
-        if ("COMPLETE".equalsIgnoreCase(paymentStatus) && order.getStatus() == Order.Status.PENDING) {
-            order.setStatus(Order.Status.PAID);
-            orderRepository.save(order);
-            orderNotifier.notifyPaymentConfirmed(order);
-            log.info("Order {} marked PAID via PayFast ITN", reference);
+        String paymentStatus = fields.get("payment_status");
+        if ("COMPLETE".equalsIgnoreCase(paymentStatus)) {
+            if (order.getStatus() == Order.Status.PENDING) {
+                order.setStatus(Order.Status.PAID);
+                orderRepository.save(order);
+                orderNotifier.notifyPaymentConfirmed(order);
+                log.info("Order {} marked PAID via PayFast ITN (pf_payment_id {})", reference, fields.get("pf_payment_id"));
+            } else {
+                log.info("PayFast ITN COMPLETE for order {} already in status {}, nothing to do", reference, order.getStatus());
+            }
+        } else {
+            log.info("PayFast ITN for order {} has payment_status {}, order left as {}",
+                    reference, paymentStatus, order.getStatus());
         }
 
         return ResponseEntity.ok("ok");
@@ -111,8 +138,8 @@ public class PaymentController {
         }
     }
 
-    /** Preserves field order, which PayFast's signature scheme depends on. */
-    private static Map<String, String> parseFormBodyPreservingOrder(String rawBody) {
+    /** Preserves field order (PayFast's signature depends on it) and keeps blank fields. */
+    static Map<String, String> parseFormBodyPreservingOrder(String rawBody) {
         Map<String, String> result = new LinkedHashMap<>();
         for (String pair : rawBody.split("&")) {
             if (pair.isEmpty()) continue;
@@ -124,5 +151,3 @@ public class PaymentController {
         return result;
     }
 }
-
-

@@ -1,5 +1,6 @@
 package com.guardpulse.backend.orders;
 
+import com.guardpulse.backend.customer.Customer;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -52,6 +53,11 @@ public class Order {
 
     private Instant createdAt = Instant.now();
 
+    /** The account this order was placed under, or null for guest checkout / deleted accounts. */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
     protected Order() {
     }
 
@@ -95,6 +101,6 @@ public class Order {
     public BigDecimal getTotal() { return total; }
     public List<OrderItem> getItems() { return items; }
     public Instant getCreatedAt() { return createdAt; }
+    public Customer getCustomer() { return customer; }
+    public void setCustomer(Customer customer) { this.customer = customer; }
 }
-
-

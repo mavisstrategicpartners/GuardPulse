@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, User } from "lucide-react";
 import { useCart } from "../api/CartContext";
+import { useAuth } from "../api/AuthContext";
 import type { Category } from "../types";
 
 export const FILTERS: { key: Category | "all" | "bundle"; label: string }[] = [
@@ -13,6 +14,7 @@ export const FILTERS: { key: Category | "all" | "bundle"; label: string }[] = [
 
 export default function Header() {
   const { itemCount, openCart } = useCart();
+  const { user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -50,13 +52,22 @@ export default function Header() {
           ))}
         </nav>
 
-        <button
-          onClick={openCart}
-          className="inline-flex items-center gap-2 bg-navydeep px-5 py-2.5 text-sm font-medium font-display text-paper transition-opacity hover:opacity-85"
-        >
-          <ShoppingCart size={16} />
-          {itemCount > 0 ? `Cart · ${itemCount}` : "Cart"}
-        </button>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Link
+            to={user ? "/account" : "/login"}
+            className="inline-flex items-center gap-2 border border-line px-3 py-2.5 text-sm font-display text-ink transition-colors hover:bg-card sm:px-4"
+          >
+            <User size={16} />
+            <span className="hidden sm:inline">{user ? user.full_name.split(" ")[0] : "Log in"}</span>
+          </Link>
+          <button
+            onClick={openCart}
+            className="inline-flex items-center gap-2 bg-navydeep px-5 py-2.5 text-sm font-medium font-display text-paper transition-opacity hover:opacity-85"
+          >
+            <ShoppingCart size={16} />
+            {itemCount > 0 ? `Cart · ${itemCount}` : "Cart"}
+          </button>
+        </div>
       </div>
     </header>
   );
