@@ -13,11 +13,11 @@ import Terms from "./pages/legal/Terms";
 import Delivery from "./pages/legal/Delivery";
 import Contact from "./pages/legal/Contact";
 import TrackOrder from "./pages/TrackOrder";
-import Login from "./pages/auth/Login";
-import Register from "./pages/auth/Register";
-import ForgotPassword from "./pages/auth/ForgotPassword";
-import ResetPassword from "./pages/auth/ResetPassword";
-import Account from "./pages/auth/Account";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import Account from "./pages/Account";
 
 export default function App() {
   return (

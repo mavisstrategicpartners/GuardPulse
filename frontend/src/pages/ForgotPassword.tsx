@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
-import { requestPasswordReset } from "../../api/client";
+import { requestPasswordReset } from "../api/client";
 
 export default function ForgotPassword() {
   const [submitting, setSubmitting] = useState(false);

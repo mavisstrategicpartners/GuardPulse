@@ -259,3 +259,9 @@ export async function requestPasswordReset(email: string): Promise<void> {
 export async function resetPassword(token: string, newPassword: string): Promise<void> {
   await api.post("/auth/reset-password", { token, newPassword });
 }
+
+/** Pulls the backend's {"message": "..."} error body out of an axios error, or falls back. */
+export function errorMessage(err: unknown, fallback: string): string {
+  const axiosErr = err as { response?: { data?: { message?: string } } };
+  return axiosErr?.response?.data?.message || fallback;
+}

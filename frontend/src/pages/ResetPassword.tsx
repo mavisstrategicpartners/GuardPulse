@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { resetPassword } from "../../api/client";
+import { resetPassword } from "../api/client";
 
 function extractErrorMessage(err: unknown): string {
   const axiosErr = err as { response?: { data?: { message?: string } } };
