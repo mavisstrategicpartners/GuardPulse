@@ -41,6 +41,8 @@ public class Customer {
     public Long getId() { return id; }
     public String getEmail() { return email; }
     public String getPasswordHash() { return passwordHash; }
+    /** Used by AuthService.resetPassword() when a customer resets a forgotten password. */
+    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
     public String getFullName() { return fullName; }
     public void setFullName(String fullName) { this.fullName = fullName; }
     public String getPhone() { return phone; }

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -47,6 +48,18 @@ public class AuthController {
         public String fullName;
         @Size(max = 30)
         public String phone;
+    }
+
+    public static class ForgotPasswordRequest {
+        @NotBlank @Email @Size(max = 254)
+        public String email;
+    }
+
+    public static class ResetPasswordRequest {
+        @NotBlank
+        public String token;
+        @NotBlank @Size(min = 8, max = 72)
+        public String newPassword;
     }
 
     public record AuthResponse(String token, CustomerDto customer) {}
@@ -87,5 +100,23 @@ public class AuthController {
     public List<OrderDto> myOrders(@RequestHeader(value = "Authorization", required = false) String authorization) {
         Customer customer = authService.requireCustomer(authorization);
         return orderRepository.findByCustomerOrderByCreatedAtDesc(customer).stream().map(OrderDto::from).toList();
+    }
+
+    /**
+     * Always responds the same way whether or not the email is registered, so this endpoint
+     * can't be used to find out which emails have accounts. The frontend should show a fixed
+     * "If that email has an account, we've sent a reset link" message regardless of the
+     * response.
+     */
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Map<String, String>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        authService.requestPasswordReset(request.email);
+        return ResponseEntity.ok(Map.of("message", "If that email has an account, we've sent a reset link."));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Map<String, String>> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        authService.resetPassword(request.token, request.newPassword);
+        return ResponseEntity.ok(Map.of("message", "Your password has been reset. You can log in now."));
     }
 }

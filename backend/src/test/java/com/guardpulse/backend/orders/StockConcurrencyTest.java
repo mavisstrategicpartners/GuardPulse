@@ -12,10 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import com.guardpulse.backend.catalog.Product;
 import com.guardpulse.backend.catalog.ProductRepository;
-import com.guardpulse.backend.orders.Cart;
-import com.guardpulse.backend.orders.CartItem;
-import com.guardpulse.backend.orders.CartItemRepository;
-import com.guardpulse.backend.orders.CartRepository;
+
 
 import java.util.List;
 import java.util.concurrent.*;

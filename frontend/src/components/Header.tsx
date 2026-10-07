@@ -14,7 +14,7 @@ export const FILTERS: { key: Category | "all" | "bundle"; label: string }[] = [
 
 export default function Header() {
   const { itemCount, openCart } = useCart();
-  const { user } = useAuth();
+  const { customer, loading } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -33,7 +33,7 @@ export default function Header() {
             <circle cx="13" cy="13" r="10" fill="none" stroke="var(--color-amberdeep)" strokeWidth="1.6" />
             <circle cx="13" cy="13" r="3" fill="var(--color-amberdeep)" />
           </svg>
-          <span className="font-display text-xl font-bold tracking-tight text-ink">GuardPulse</span>
+          <span className="font-display text-xl font-bold tracking-tight text-ink">AI Smart Camera Security</span>
         </Link>
 
         <nav className="hidden gap-7 md:flex">
@@ -52,14 +52,17 @@ export default function Header() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2 sm:gap-3">
-          <Link
-            to={user ? "/account" : "/login"}
-            className="inline-flex items-center gap-2 border border-line px-3 py-2.5 text-sm font-display text-ink transition-colors hover:bg-card sm:px-4"
-          >
-            <User size={16} />
-            <span className="hidden sm:inline">{user ? user.full_name.split(" ")[0] : "Log in"}</span>
-          </Link>
+        <div className="flex items-center gap-3">
+          {!loading && (
+            <Link
+              to={customer ? "/account" : "/login"}
+              className="inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-ink"
+            >
+              <User size={16} />
+              <span className="hidden sm:inline">{customer ? customer.full_name.split(" ")[0] : "Log in"}</span>
+            </Link>
+          )}
+
           <button
             onClick={openCart}
             className="inline-flex items-center gap-2 bg-navydeep px-5 py-2.5 text-sm font-medium font-display text-paper transition-opacity hover:opacity-85"

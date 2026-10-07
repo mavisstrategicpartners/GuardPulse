@@ -20,7 +20,7 @@ import java.util.Locale;
 import java.util.Optional;
 
 /**
- * Customer registration, login and session handling.
+ * Customer registration, login, session handling, and password reset.
  *
  * Sessions are random opaque bearer tokens stored (hashed) in the database rather than JWTs,
  * so that when an admin deletes an account the customer is logged out on their very next
@@ -30,19 +30,25 @@ import java.util.Optional;
 public class AuthService {
 
     private static final Duration TOKEN_TTL = Duration.ofDays(30);
+    private static final Duration RESET_TOKEN_TTL = Duration.ofHours(1);
     private static final int MAX_PASSWORD_BYTES = 72; // BCrypt ignores anything beyond this
 
     private final CustomerRepository customers;
     private final AuthTokenRepository tokens;
+    private final PasswordResetTokenRepository resetTokens;
+    private final PasswordResetMailer resetMailer;
     private final OrderRepository orders;
     private final PasswordEncoder encoder;
     private final SecureRandom random = new SecureRandom();
     private final String dummyHash;
 
     public AuthService(CustomerRepository customers, AuthTokenRepository tokens,
+                       PasswordResetTokenRepository resetTokens, PasswordResetMailer resetMailer,
                        OrderRepository orders, PasswordEncoder encoder) {
         this.customers = customers;
         this.tokens = tokens;
+        this.resetTokens = resetTokens;
+        this.resetMailer = resetMailer;
         this.orders = orders;
         this.encoder = encoder;
         // Compared against when an email isn't registered, so "no such user" and "wrong
@@ -113,6 +119,53 @@ public class AuthService {
     }
 
     /**
+     * Starts a password reset. Always returns normally whether or not the email is
+     * registered — the caller (AuthController) always responds with the same "check your
+     * email" message either way, so an attacker can't use this to discover which emails
+     * have accounts.
+     */
+    @Transactional
+    public void requestPasswordReset(String email) {
+        resetTokens.deleteByExpiresAtBefore(Instant.now()); // tidy up stale ones as we go
+        Optional<Customer> found = customers.findByEmailIgnoreCase(normalizeEmail(email));
+        if (found.isEmpty()) {
+            return; // nothing sent, nothing revealed to the caller
+        }
+        Customer customer = found.get();
+        resetTokens.deleteByCustomer(customer); // only the newest link should ever work
+
+        byte[] bytes = new byte[32];
+        random.nextBytes(bytes);
+        String rawToken = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+        resetTokens.save(new PasswordResetToken(sha256(rawToken), customer, Instant.now().plus(RESET_TOKEN_TTL)));
+
+        resetMailer.sendResetLink(customer, rawToken);
+    }
+
+    /**
+     * Completes a password reset. Logs the customer out of every existing session (including
+     * whichever device they're using right now) — if someone else triggered this reset
+     * because they had access to the account, this cuts them off.
+     */
+    @Transactional
+    public void resetPassword(String rawToken, String newPassword) {
+        validatePassword(newPassword);
+        if (rawToken == null || rawToken.isBlank()) {
+            throw invalidResetLink();
+        }
+        PasswordResetToken resetToken = resetTokens.findByTokenHash(sha256(rawToken))
+                .filter(t -> t.getExpiresAt().isAfter(Instant.now()))
+                .orElseThrow(AuthService::invalidResetLink);
+
+        Customer customer = resetToken.getCustomer();
+        customer.setPasswordHash(encoder.encode(newPassword));
+        customers.save(customer);
+
+        resetTokens.deleteByCustomer(customer);
+        tokens.deleteByCustomer(customer);
+    }
+
+    /**
      * Admin action. Removes the account and logs the person out everywhere, but KEEPS their
      * orders (detached from the account) — order records are needed for fulfilment, refunds
      * and tax, and each order already carries its own name/email/address snapshot.
@@ -127,6 +180,7 @@ public class AuthService {
         }
         orders.saveAll(theirOrders);
         tokens.deleteByCustomer(customer);
+        resetTokens.deleteByCustomer(customer);
         customers.delete(customer);
     }
 
@@ -168,6 +222,11 @@ public class AuthService {
     private static ResponseStatusException emailTaken() {
         return new ResponseStatusException(HttpStatus.CONFLICT,
                 "An account with that email already exists. Try logging in instead.");
+    }
+
+    private static ResponseStatusException invalidResetLink() {
+        return new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                "That reset link is invalid or has expired. Request a new one.");
     }
 
     private static String blankToNull(String s) {

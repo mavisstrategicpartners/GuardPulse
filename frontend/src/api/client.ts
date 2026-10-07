@@ -8,7 +8,6 @@ import type {
   Order,
   Paginated,
   Customer,
-  AuthResponse,
 } from "../types";
 
 export const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://127.0.0.1:8000/api";
@@ -16,40 +15,15 @@ export const API_ORIGIN = API_BASE_URL.replace(/\/api\/?$/, "");
 
 export const api = axios.create({ baseURL: API_BASE_URL });
 
-// ---- Customer login session ----
-
-const AUTH_TOKEN_KEY = "guardpulse_auth_token";
-
-export function getStoredAuthToken(): string | null {
-  return localStorage.getItem(AUTH_TOKEN_KEY);
-}
-
-export function storeAuthToken(token: string) {
-  localStorage.setItem(AUTH_TOKEN_KEY, token);
-}
-
-export function clearStoredAuthToken() {
-  localStorage.removeItem(AUTH_TOKEN_KEY);
-}
-
-// Every API call carries the login token (if there is one), so checkout can attach the order to the account.
+/** Attaches the logged-in customer's token to every request, if there is one. */
 api.interceptors.request.use((config) => {
-  const token = getStoredAuthToken();
+  const token = getStoredCustomerToken();
   if (token) {
+    config.headers = config.headers ?? {};
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
-
-/** Pulls the server's friendly message out of an API error, or falls back to a generic one. */
-export function errorMessage(err: unknown, fallback = "Something went wrong — please try again."): string {
-  const data = (err as { response?: { data?: { message?: string } } })?.response?.data;
-  return data?.message || fallback;
-}
-
-export function errorStatus(err: unknown): number | undefined {
-  return (err as { response?: { status?: number } })?.response?.status;
-}
 
 /** Product photos come back as server-relative paths (e.g. "/media/x.jpg"); resolve against the API host. */
 export function resolveImageUrl(path: string | null): string | null {
@@ -81,7 +55,7 @@ export async function fetchProduct(slug: string): Promise<ProductDetail> {
 
 // ---- Cart ----
 
-const CART_TOKEN_KEY = "guardpulse_cart_token";
+const CART_TOKEN_KEY = "ai_smart_camera_security_cart_token";
 
 export function getStoredCartToken(): string | null {
   return localStorage.getItem(CART_TOKEN_KEY);
@@ -179,42 +153,6 @@ export function redirectToPayFast(init: PayFastInit) {
   form.submit();
 }
 
-// ---- Customer accounts ----
-
-export async function registerCustomer(payload: {
-  full_name: string;
-  email: string;
-  phone?: string;
-  password: string;
-}): Promise<AuthResponse> {
-  const { data } = await api.post<AuthResponse>("/auth/register", payload);
-  return data;
-}
-
-export async function loginCustomer(email: string, password: string): Promise<AuthResponse> {
-  const { data } = await api.post<AuthResponse>("/auth/login", { email, password });
-  return data;
-}
-
-export async function logoutCustomer(): Promise<void> {
-  await api.post("/auth/logout");
-}
-
-export async function fetchMe(): Promise<Customer> {
-  const { data } = await api.get<Customer>("/auth/me");
-  return data;
-}
-
-export async function updateProfile(payload: { full_name: string; phone: string }): Promise<Customer> {
-  const { data } = await api.patch<Customer>("/auth/me", payload);
-  return data;
-}
-
-export async function fetchMyOrders(): Promise<Order[]> {
-  const { data } = await api.get<Order[]>("/auth/orders");
-  return data;
-}
-
 // ---- Store info ----
 
 export interface StoreInfo {
@@ -243,4 +181,81 @@ export interface ShippingQuote {
 export async function fetchShippingQuote(cartToken: string): Promise<ShippingQuote> {
   const { data } = await api.get<ShippingQuote>("/shipping/quote", { params: { cart_token: cartToken } });
   return data;
+}
+
+// ---- Customer accounts ----
+
+const CUSTOMER_TOKEN_KEY = "guardpulse_customer_token";
+
+export function getStoredCustomerToken(): string | null {
+  return localStorage.getItem(CUSTOMER_TOKEN_KEY);
+}
+
+export function storeCustomerToken(token: string) {
+  localStorage.setItem(CUSTOMER_TOKEN_KEY, token);
+}
+
+export function clearStoredCustomerToken() {
+  localStorage.removeItem(CUSTOMER_TOKEN_KEY);
+}
+
+interface AuthResponse {
+  token: string;
+  customer: Customer;
+}
+
+export async function registerCustomer(payload: {
+  full_name: string;
+  email: string;
+  phone?: string;
+  password: string;
+}): Promise<Customer> {
+  const { data } = await api.post<AuthResponse>("/auth/register", {
+    fullName: payload.full_name,
+    email: payload.email,
+    phone: payload.phone,
+    password: payload.password,
+  });
+  storeCustomerToken(data.token);
+  return data.customer;
+}
+
+export async function loginCustomer(email: string, password: string): Promise<Customer> {
+  const { data } = await api.post<AuthResponse>("/auth/login", { email, password });
+  storeCustomerToken(data.token);
+  return data.customer;
+}
+
+export async function logoutCustomer(): Promise<void> {
+  try {
+    await api.post("/auth/logout");
+  } finally {
+    clearStoredCustomerToken();
+  }
+}
+
+export async function fetchCurrentCustomer(): Promise<Customer> {
+  const { data } = await api.get<Customer>("/auth/me");
+  return data;
+}
+
+export async function updateCustomerProfile(payload: { full_name: string; phone?: string }): Promise<Customer> {
+  const { data } = await api.patch<Customer>("/auth/me", {
+    fullName: payload.full_name,
+    phone: payload.phone,
+  });
+  return data;
+}
+
+export async function fetchMyOrders(): Promise<Order[]> {
+  const { data } = await api.get<Order[]>("/auth/orders");
+  return data;
+}
+
+export async function requestPasswordReset(email: string): Promise<void> {
+  await api.post("/auth/forgot-password", { email });
+}
+
+export async function resetPassword(token: string, newPassword: string): Promise<void> {
+  await api.post("/auth/reset-password", { token, newPassword });
 }

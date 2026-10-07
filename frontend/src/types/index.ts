@@ -84,15 +84,12 @@ export interface Paginated<T> {
   results: T[];
 }
 
+// ---- Customer accounts ----
+
 export interface Customer {
   id: number;
   email: string;
   full_name: string;
   phone: string | null;
   created_at: string;
-}
-
-export interface AuthResponse {
-  token: string;
-  customer: Customer;
 }
