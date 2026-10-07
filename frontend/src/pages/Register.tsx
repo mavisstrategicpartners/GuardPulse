@@ -4,7 +4,7 @@ import { useAuth } from "../api/AuthContext";
 import { errorMessage } from "../api/client";
 
 export default function Register() {
-  const { user, loading, register } = useAuth();
+  const { customer, loading, register } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = (location.state as { from?: string } | null)?.from ?? "/account";
@@ -13,7 +13,7 @@ export default function Register() {
   const [submitting, setSubmitting] = useState(false);
 
   if (loading) return <p className="px-6 py-20 text-center text-sm text-muted">Loading…</p>;
-  if (user) return <Navigate to={from} replace />;
+  if (customer) return <Navigate to={from} replace />;
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();

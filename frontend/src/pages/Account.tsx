@@ -14,16 +14,16 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 export default function Account() {
-  const { user, loading, logout, updateProfile } = useAuth();
+  const { customer, loading, logout, updateProfile } = useAuth();
   const [orders, setOrders] = useState<Order[] | null>(null);
   const [ordersError, setOrdersError] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [profileError, setProfileError] = useState<string | null>(null);
 
-  const userId = user?.id;
+  const customerId = customer?.id;
   useEffect(() => {
-    if (userId === undefined) return;
+    if (customerId === undefined) return;
     let cancelled = false;
     fetchMyOrders()
       .then((o) => {
@@ -35,10 +35,10 @@ export default function Account() {
     return () => {
       cancelled = true;
     };
-  }, [userId]);
+  }, [customerId]);
 
   if (loading) return <p className="px-6 py-20 text-center text-sm text-muted">Loading…</p>;
-  if (!user) return <Navigate to="/login" state={{ from: "/account" }} replace />;
+  if (!customer) return <Navigate to="/login" state={{ from: "/account" }} replace />;
 
   async function handleSave(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -64,7 +64,7 @@ export default function Account() {
       <div className="mb-8 flex items-start justify-between gap-4">
         <div>
           <h1 className="font-display text-2xl font-semibold">My account</h1>
-          <p className="mt-1 text-sm text-muted">{user.email}</p>
+          <p className="mt-1 text-sm text-muted">{customer.email}</p>
         </div>
         <button
           onClick={() => logout()}
@@ -82,7 +82,7 @@ export default function Account() {
             <input
               name="full_name"
               required
-              defaultValue={user.full_name}
+              defaultValue={customer.full_name}
               className="w-full border border-line bg-paper px-3 py-2.5 text-sm"
             />
           </div>
@@ -91,7 +91,7 @@ export default function Account() {
             <input
               name="phone"
               type="tel"
-              defaultValue={user.phone ?? ""}
+              defaultValue={customer.phone ?? ""}
               className="w-full border border-line bg-paper px-3 py-2.5 text-sm"
             />
           </div>

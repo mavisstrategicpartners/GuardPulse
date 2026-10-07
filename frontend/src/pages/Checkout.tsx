@@ -21,7 +21,7 @@ const PROVINCES = [
 
 export default function Checkout() {
   const { cart, refresh } = useCart();
-  const { user, loading: authLoading } = useAuth();
+  const { customer, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -123,8 +123,10 @@ export default function Checkout() {
     <div className="mx-auto grid max-w-5xl gap-10 px-6 py-14 md:grid-cols-[1.3fr_1fr]">
       <div>
         <h1 className="mb-2 font-display text-2xl font-semibold">Delivery details</h1>
-        {user ? (
-          <p className="mb-6 text-sm text-muted">Checking out as {user.email}. This order will appear in your account.</p>
+        {customer ? (
+          <p className="mb-6 text-sm text-muted">
+            Checking out as {customer.email}. This order will appear in your account.
+          </p>
         ) : (
           <p className="mb-6 text-sm text-muted">
             Have an account?{" "}
@@ -134,11 +136,11 @@ export default function Checkout() {
             to fill in your details and keep track of this order — or just carry on as a guest.
           </p>
         )}
-        <form id="checkout-form" key={user?.id ?? "guest"} onSubmit={handleSubmit} className="grid gap-4">
-          <Field label="Full name" name="full_name" required defaultValue={user?.full_name} />
+        <form id="checkout-form" key={customer?.id ?? "guest"} onSubmit={handleSubmit} className="grid gap-4">
+          <Field label="Full name" name="full_name" required defaultValue={customer?.full_name} />
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Email" name="email" type="email" required defaultValue={user?.email} />
-            <Field label="Phone" name="phone" type="tel" required defaultValue={user?.phone ?? undefined} />
+            <Field label="Email" name="email" type="email" required defaultValue={customer?.email} />
+            <Field label="Phone" name="phone" type="tel" required defaultValue={customer?.phone ?? undefined} />
           </div>
           <Field label="Address line 1" name="address_line1" required />
           <Field label="Address line 2 (optional)" name="address_line2" />

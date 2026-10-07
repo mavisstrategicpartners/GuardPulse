@@ -4,7 +4,7 @@ import { useAuth } from "../api/AuthContext";
 import { errorMessage } from "../api/client";
 
 export default function Login() {
-  const { user, loading, login } = useAuth();
+  const { customer, loading, login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = (location.state as { from?: string } | null)?.from ?? "/account";
@@ -13,7 +13,7 @@ export default function Login() {
   const [submitting, setSubmitting] = useState(false);
 
   if (loading) return <p className="px-6 py-20 text-center text-sm text-muted">Loading…</p>;
-  if (user) return <Navigate to={from} replace />;
+  if (customer) return <Navigate to={from} replace />;
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -46,10 +46,12 @@ export default function Login() {
           />
         </div>
         <div>
-          <label className="mb-1 block text-[13px] text-[#5C5545]">Password</label>
-          <Link to="/forgot-password" className="text-[13px] text-amberdeep hover:underline">
-  Forgot password?
-</Link>
+          <div className="mb-1 flex items-center justify-between">
+            <label className="block text-[13px] text-[#5C5545]">Password</label>
+            <Link to="/forgot-password" className="text-[13px] text-amberdeep hover:underline">
+              Forgot password?
+            </Link>
+          </div>
           <input
             name="password"
             type="password"
