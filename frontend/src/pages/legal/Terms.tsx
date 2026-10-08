@@ -10,9 +10,8 @@ export default function Terms() {
 
       <h2 className="font-display text-lg font-semibold mt-3">Pricing and availability</h2>
       <p>
-        All prices are listed in South African Rand (ZAR) and include VAT where applicable. We
-        make reasonable efforts to keep stock levels accurate, but availability isn't guaranteed
-        until your order is confirmed. If an item you ordered turns out to be unavailable, we'll
+       All prices are listed in South African Rand (ZAR). We make reasonable efforts to keep stock levels accurate,
+        but availability isn't guaranteed until your order is confirmed. If an item you ordered turns out to be unavailable, we'll
         contact you and offer a refund or alternative.
       </p>
 

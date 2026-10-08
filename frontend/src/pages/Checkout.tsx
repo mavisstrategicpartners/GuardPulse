@@ -4,10 +4,9 @@ import {
   submitOrder,
   initPayFastPayment,
   redirectToPayFast,
-  fetchStoreInfo,
   fetchShippingQuote,
   errorMessage,
-  type StoreInfo,
+
 } from "../api/client";
 import type { Order } from "../types";
 import { useAuth } from "../api/AuthContext";
@@ -25,12 +24,10 @@ export default function Checkout() {
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [storeInfo, setStoreInfo] = useState<StoreInfo | null>(null);
+ 
   const [shippingFee, setShippingFee] = useState<number | null>(null);
 
-  useEffect(() => {
-    fetchStoreInfo().then(setStoreInfo).catch(() => {});
-  }, []);
+ 
 
   // Live shipping estimate — recalculated whenever the cart's contents change. The final
   // charge is always the server's own calculation at checkout time, not this preview.
@@ -207,14 +204,7 @@ export default function Checkout() {
           <span>Total</span>
           <span>{total === null ? "—" : formatZAR(total)}</span>
         </div>
-        {storeInfo && (
-          <p className="mt-3 text-xs text-muted">
-            {storeInfo.prices_include_vat
-              ? `Prices include ${storeInfo.vat_rate_percent}% VAT.`
-              : `${storeInfo.vat_rate_percent}% VAT will be added.`}
-            {storeInfo.vat_number && ` VAT No: ${storeInfo.vat_number}.`}
-          </p>
-        )}
+       
       </aside>
     </div>
   );

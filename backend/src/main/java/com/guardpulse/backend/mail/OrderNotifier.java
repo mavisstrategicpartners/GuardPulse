@@ -22,13 +22,6 @@ public class OrderNotifier {
     @Value("${mail.admin-address}")
     private String adminAddress;
 
-    @Value("${store.vat-number:}")
-    private String vatNumber;
-
-    @Value("${store.prices-include-vat:true}")
-    private boolean pricesIncludeVat;
-   
-
     public OrderNotifier(MailService mailService) {
         this.mailService = mailService;
     }
@@ -84,8 +77,7 @@ public void notifyPaymentConfirmed(Order order) {
                     item.getSubtotal()));
         }
         sb.append("\nShipping: R").append(order.getShippingFee());
-        sb.append("\nTotal: R").append(order.getTotal());
-        sb.append(pricesIncludeVat ? " (incl. VAT)" : " (excl. VAT)").append("\n\n");
+        sb.append("\nTotal: R").append(order.getTotal()).append("\n\n");
         sb.append("Shipping to:\n");
         sb.append(order.getAddressLine1());
         if (order.getAddressLine2() != null && !order.getAddressLine2().isBlank()) {
@@ -94,9 +86,6 @@ public void notifyPaymentConfirmed(Order order) {
         sb.append(", ").append(order.getCity()).append(", ").append(order.getProvince())
                 .append(" ").append(order.getPostalCode()).append("\n\n");
         sb.append("We'll email you again once your payment is confirmed and again when it ships.\n\n— GuardPulse");
-        if (vatNumber != null && !vatNumber.isBlank()) {
-            sb.append("\nVAT No: ").append(vatNumber);
-        }
         return sb.toString();
     }
 
@@ -111,5 +100,3 @@ public void notifyPaymentConfirmed(Order order) {
                 + "Manage this order in the admin panel: /admin/orders/" + order.getId();
     }
 }
-
-

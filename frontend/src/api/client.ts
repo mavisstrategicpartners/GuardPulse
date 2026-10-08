@@ -153,19 +153,6 @@ export function redirectToPayFast(init: PayFastInit) {
   form.submit();
 }
 
-// ---- Store info ----
-
-export interface StoreInfo {
-  vat_number: string | null;
-  vat_rate_percent: number;
-  prices_include_vat: boolean;
-}
-
-export async function fetchStoreInfo(): Promise<StoreInfo> {
-  const { data } = await api.get<StoreInfo>("/store-info");
-  return data;
-}
-
 // ---- Shipping ----
 
 export interface ShippingQuote {
