@@ -18,6 +18,8 @@ import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Account from "./pages/Account";
+import WhatsAppButton from "./components/WhatsAppButton";
+import SolutionPage from "./pages/SolutionPage";
 
 export default function App() {
   return (
@@ -40,6 +42,8 @@ export default function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/account" element={<Account />} />
+            <Route path="/whatsapp" element={<WhatsAppButton />} />
+            <Route path="/solutions/:slug" element={<SolutionPage />} />
           </Routes>
           <Footer />
           <CartDrawer />

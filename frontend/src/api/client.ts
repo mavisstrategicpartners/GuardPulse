@@ -186,6 +186,36 @@ export function clearStoredCustomerToken() {
   localStorage.removeItem(CUSTOMER_TOKEN_KEY);
 }
 
+// ---- Reviews ----
+
+export interface ProductReview {
+  id: number;
+  authorName: string;
+  rating: number;
+  comment: string;
+  verifiedPurchase: boolean;
+  createdAt: string;
+}
+
+export interface ReviewSummary {
+  averageRating: number;
+  count: number;
+  reviews: ProductReview[];
+}
+
+export async function fetchProductReviews(slug: string): Promise<ReviewSummary> {
+  const { data } = await api.get<ReviewSummary>(`/products/${slug}/reviews`);
+  return data;
+}
+
+export async function submitProductReview(
+  slug: string,
+  payload: { authorName: string; rating: number; comment: string }
+): Promise<ProductReview> {
+  const { data } = await api.post<ProductReview>(`/products/${slug}/reviews`, payload);
+  return data;
+}
+
 interface AuthResponse {
   token: string;
   customer: Customer;
