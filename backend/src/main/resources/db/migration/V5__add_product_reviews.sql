@@ -1,6 +1,6 @@
-CREATE TABLE products_reviews (
+CREATE TABLE product_reviews (
     id BIGSERIAL PRIMARY KEY,
-    product_id BIGINT NOT NULL REFERENCES product(id),
+    product_id BIGINT NOT NULL REFERENCES products(id),
     author_name VARCHAR(120) NOT NULL,
     rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
     comment VARCHAR(2000) NOT NULL,
@@ -8,4 +8,4 @@ CREATE TABLE products_reviews (
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE INDEX idx_product_reviews_product_id ON products_reviews(product_id);
+CREATE INDEX idx_product_reviews_product_id ON product_reviews(product_id);
