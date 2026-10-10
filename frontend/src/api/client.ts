@@ -228,7 +228,7 @@ export async function registerCustomer(payload: {
   password: string;
 }): Promise<Customer> {
   const { data } = await api.post<AuthResponse>("/auth/register", {
-    fullName: payload.full_name,
+    full_name: payload.full_name,
     email: payload.email,
     phone: payload.phone,
     password: payload.password,
@@ -258,7 +258,7 @@ export async function fetchCurrentCustomer(): Promise<Customer> {
 
 export async function updateCustomerProfile(payload: { full_name: string; phone?: string }): Promise<Customer> {
   const { data } = await api.patch<Customer>("/auth/me", {
-    fullName: payload.full_name,
+    full_name: payload.full_name,
     phone: payload.phone,
   });
   return data;
