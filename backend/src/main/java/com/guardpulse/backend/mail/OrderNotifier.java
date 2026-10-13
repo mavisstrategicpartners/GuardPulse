@@ -26,52 +26,45 @@ public class OrderNotifier {
         this.mailService = mailService;
     }
 
-    /**
-     * Fires off the customer confirmation and merchant notification emails. Deliberately
-     * swallows any mail-sending failure (SMTP down, bad creds, etc.) — a flaky mail server
-     * must never roll back or fail an otherwise-successful checkout. The order is the source
-     * of truth; email is a courtesy on top of it. Failures are logged so they're not silent.
-     */
     @Async("mailExecutor")
-public void notifyOrderPlaced(Order order) {
+    public void notifyOrderPlaced(Order order) {
         try {
-            mailService.send(order.getEmail(), "GuardPulse order confirmed — " + order.getReference(),
+            mailService.send(order.getEmail(), "GuardPulse order confirmed — " + order.getShortReference(),
                     customerBody(order));
         } catch (Exception e) {
-            log.error("Failed to send customer confirmation email for order {}", order.getReference(), e);
+            log.error("Failed to send customer confirmation email for order {}", order.getShortReference(), e);
         }
         try {
-            mailService.send(adminAddress, "New GuardPulse order — " + order.getReference(),
+            mailService.send(adminAddress, "New GuardPulse order — " + order.getShortReference(),
                     merchantBody(order));
         } catch (Exception e) {
-            log.error("Failed to send merchant notification email for order {}", order.getReference(), e);
+            log.error("Failed to send merchant notification email for order {}", order.getShortReference(), e);
         }
     }
 
-    /** Fired from the PayFast ITN webhook once payment actually clears. */
-  @Async("mailExecutor")
-public void notifyPaymentConfirmed(Order order) {
+    @Async("mailExecutor")
+    public void notifyPaymentConfirmed(Order order) {
         try {
-            mailService.send(order.getEmail(), "Payment received — GuardPulse order " + order.getReference(),
+            mailService.send(order.getEmail(), "Payment received — GuardPulse order " + order.getShortReference(),
                     "Thanks, " + order.getFullName() + ". We've received your payment for order "
-                            + order.getReference() + " (R" + order.getTotal() + ").\n\n"
+                            + order.getShortReference() + " (R" + order.getTotal() + ").\n\n"
                             + "We'll email you again once it ships.\n\n— GuardPulse");
         } catch (Exception e) {
-            log.error("Failed to send payment-confirmed email for order {}", order.getReference(), e);
+            log.error("Failed to send payment-confirmed email for order {}", order.getShortReference(), e);
         }
         try {
-            mailService.send(adminAddress, "Payment received — order " + order.getReference(),
-                    "Order " + order.getReference() + " from " + order.getFullName()
+            mailService.send(adminAddress, "Payment received — order " + order.getShortReference(),
+                    "Order " + order.getShortReference() + " from " + order.getFullName()
                             + " has been paid (R" + order.getTotal() + "). Ready to fulfil.");
         } catch (Exception e) {
-            log.error("Failed to send merchant payment-confirmed email for order {}", order.getReference(), e);
+            log.error("Failed to send merchant payment-confirmed email for order {}", order.getShortReference(), e);
         }
     }
 
     private String customerBody(Order order) {
         StringBuilder sb = new StringBuilder();
         sb.append("Thanks, ").append(order.getFullName()).append(".\n\n");
-        sb.append("Your order is confirmed. Reference: ").append(order.getReference()).append("\n\n");
+        sb.append("Your order is confirmed. Reference: ").append(order.getShortReference()).append("\n\n");
         for (OrderItem item : order.getItems()) {
             sb.append(String.format("  %-45s x%-3d  R%s%n", item.getProductName(), item.getQuantity(),
                     item.getSubtotal()));
@@ -94,7 +87,7 @@ public void notifyPaymentConfirmed(Order order) {
                 .map(OrderItem::getSubtotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         return "New order from " + order.getFullName() + " (" + order.getEmail() + ", " + order.getPhone() + ")\n"
-                + "Reference: " + order.getReference() + "\n"
+                + "Reference: " + order.getShortReference() + "\n"
                 + "Items subtotal: R" + itemsTotal + "\n"
                 + "Total (incl. shipping): R" + order.getTotal() + "\n\n"
                 + "Manage this order in the admin panel: /admin/orders/" + order.getId();

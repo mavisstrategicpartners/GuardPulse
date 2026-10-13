@@ -73,6 +73,7 @@ public class Order {
         this.postalCode = postalCode;
         this.shippingFee = shippingFee != null ? shippingFee : BigDecimal.ZERO;
     }
+    
 
     public void addItem(OrderItem item) {
         items.add(item);
@@ -84,6 +85,9 @@ public class Order {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         this.total = itemsTotal.add(shippingFee);
     }
+    public String getShortReference() {
+    return "GP-" + reference.toString().substring(0, 8).toUpperCase();
+}
 
     public Long getId() { return id; }
     public UUID getReference() { return reference; }
