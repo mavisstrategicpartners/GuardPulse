@@ -2,44 +2,115 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Edit product — GuardPulse admin</title>
+    <title th:text="${product != null} ? 'Edit product — GuardPulse admin' : 'New product — GuardPulse admin'"></title>
     <th:block th:replace="admin/fragments :: styles"></th:block>
 </head>
 <body>
     <div th:replace="admin/fragments :: nav('products')"></div>
     <div class="wrap" style="max-width:560px;">
         <p class="muted"><a href="/admin/products">← All products</a></p>
-        <h1 th:text="${product.name}"></h1>
+        <h1 th:text="${product != null} ? ${product.name} : 'New product'"></h1>
 
-        <div class="card" th:if="${product.imageUrl}">
+        <p th:if="${param.created}" class="notice">Product created.</p>
+        <p th:if="${param.saved}" class="notice">Changes saved.</p>
+        <p th:if="${param.slugTaken}" class="error-msg">That slug is already in use — pick a different one.</p>
+
+        <div class="card" th:if="${product != null and product.imageUrl != null}">
             <img th:src="${product.imageUrl}" alt="" style="max-width:100%; display:block;">
         </div>
 
-        <form method="post" th:action="@{'/admin/products/' + ${product.id}}" enctype="multipart/form-data" class="card">
-            <label for="price">Price (R)</label>
-            <input type="number" step="0.01" id="price" name="price" th:value="${product.price}" required>
+        <form method="post"
+              th:action="${product != null} ? @{'/admin/products/' + ${product.id}} : @{/admin/products}"
+              enctype="multipart/form-data" class="card">
 
-            <label for="stockQty">Stock quantity</label>
-            <input type="number" id="stockQty" name="stockQty" th:value="${product.stockQty}" required>
+            <label for="slug">Slug</label>
+            <input type="text" id="slug" name="slug" th:if="${product == null}" required
+                   placeholder="e.g. mercusys-mc200">
+            <p class="muted" style="margin:-10px 0 16px;" th:if="${product == null}">
+                Used in the product URL. Letters, numbers and hyphens only — can't be changed later.
+            </p>
+            <input type="text" th:if="${product != null}" th:value="${product.slug}" disabled
+                   style="width:100%; padding:9px 11px; border:1px solid var(--line); background:var(--paper); font-size:14px; margin-bottom:16px;">
 
-            <label for="weightKg">Shipping weight (kg)</label>
-<input type="number" step="0.01" min="0" id="weightKg" name="weightKg" th:value="${product.weightKg}" required>
-<p class="muted" style="margin:-10px 0 16px;">
-    Boxed weight incl. packaging — used to calculate the shipping fee at checkout.
-</p>
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" th:value="${product != null} ? ${product.name} : ''" required>
+
+            <label for="brand">Brand</label>
+            <input type="text" id="brand" name="brand" th:value="${product != null} ? ${product.brand} : ''" required>
+
+            <label for="categoryId">Category</label>
+            <select id="categoryId" name="categoryId" required>
+                <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.label}"
+                        th:selected="${product != null and product.category.id == c.id}"></option>
+            </select>
 
             <div class="checkbox-row">
+                <input type="checkbox" id="bundle" name="bundle" value="true"
+                       th:checked="${product != null} ? ${product.bundle} : false"
+                       th:disabled="${product != null}">
+                <label for="bundle" style="margin:0;">This is a bundle (multiple items sold together)</label>
+            </div>
+
+            <label for="sku">SKU</label>
+            <input type="text" id="sku" name="sku" th:value="${product != null} ? ${product.sku} : ''">
+
+            <label for="tagline">Tagline</label>
+            <input type="text" id="tagline" name="tagline" th:value="${product != null} ? ${product.tagline} : ''" required
+                   placeholder="One line shown on the product card">
+
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="4"
+                      style="width:100%; padding:9px 11px; border:1px solid var(--line); background:#fff; font-size:14px; margin-bottom:16px;"
+                      th:text="${product != null} ? ${product.description} : ''"></textarea>
+
+            <label for="costPrice">Cost price (R) — internal, never shown to customers</label>
+            <input type="number" step="0.01" min="0" id="costPrice" name="costPrice"
+                   th:value="${product != null} ? ${product.costPrice} : ''">
+
+            <label for="price">Selling price (R)</label>
+            <input type="number" step="0.01" min="0" id="price" name="price"
+                   th:value="${product != null} ? ${product.price} : ''" required>
+
+            <label for="stockQty">Stock quantity</label>
+            <input type="number" id="stockQty" name="stockQty"
+                   th:value="${product != null} ? ${product.stockQty} : 0" required>
+
+            <label for="weightKg">Shipping weight (kg)</label>
+            <input type="number" step="0.01" min="0" id="weightKg" name="weightKg"
+                   th:value="${product != null} ? ${product.weightKg} : 0.5" required>
+            <p class="muted" style="margin:-10px 0 16px;">
+                Boxed weight incl. packaging — used to calculate the shipping fee at checkout.
+            </p>
+
+            <div class="checkbox-row" th:if="${product != null}">
                 <input type="checkbox" id="active" name="active" th:checked="${product.active}">
                 <label for="active" style="margin:0;">Active (visible in the store)</label>
             </div>
 
-            <label for="image">Replace product photo</label>
-            <input type="file" id="image" name="image" accept="image/*">
-            <p class="muted" style="margin:-10px 0 16px;">Leave blank to keep the current photo.</p>
+            <label for="imageUrl">Image URL / path</label>
+            <input type="text" id="imageUrl" name="imageUrl"
+                   th:value="${product != null} ? ${product.imageUrl} : ''"
+                   placeholder="/products/your-slug.jpg">
+            <p class="muted" style="margin:-10px 0 16px;">
+                Preferred — points at a photo already bundled into the app (persists across deploys).
+            </p>
 
-            <button type="submit" class="primary">Save changes</button>
+            <label for="image">...or upload a photo now</label>
+            <input type="file" id="image" name="image" accept="image/*">
+            <p class="muted" style="margin:-10px 0 16px;">
+                Quick swap between deploys, but Render's free tier wipes uploaded files on every
+                restart/redeploy — use the URL field above for anything permanent. Leave both blank
+                to keep the current photo.
+            </p>
+
+            <button type="submit" class="primary" th:text="${product != null} ? 'Save changes' : 'Create product'"></button>
+        </form>
+
+        <form th:if="${product != null}" method="post" th:action="@{'/admin/products/' + ${product.id} + '/delete'}"
+              onsubmit="return confirm('Delete this product? If it has never been ordered it will be removed completely. If it has order history, it will be deactivated instead and hidden from the store.');"
+              style="margin-top:16px;">
+            <button type="submit" class="danger">Delete product</button>
         </form>
     </div>
 </body>
 </html>
-

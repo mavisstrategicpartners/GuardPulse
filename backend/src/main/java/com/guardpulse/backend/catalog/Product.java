@@ -115,6 +115,13 @@ public class Product {
     public void setActive(boolean active) { this.active = active; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     public void setWeightKg(BigDecimal weightKg) { this.weightKg = weightKg; }
+        public void setName(String name) { this.name = name; }
+    public void setBrand(String brand) { this.brand = brand; }
+    public void setSku(String sku) { this.sku = sku; }
+    public void setCategory(Category category) { this.category = category; }
+    public void setCostPrice(BigDecimal costPrice) { this.costPrice = costPrice; }
+    public void setTagline(String tagline) { this.tagline = tagline; }
+    public void setDescription(String description) { this.description = description; }
  
     public Long getId() { return id; }
     public String getSlug() { return slug; }
