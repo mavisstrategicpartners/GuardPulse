@@ -14,6 +14,7 @@ import com.guardpulse.backend.mail.OrderNotifier;
 import com.guardpulse.backend.orders.dto.CheckoutRequest;
 import com.guardpulse.backend.orders.dto.OrderDto;
 import com.guardpulse.backend.shipping.ShippingService;
+import com.guardpulse.backend.shipping.ShippingQuoter;
 
  
 import java.math.BigDecimal;
@@ -27,15 +28,17 @@ public class OrderController {
     private final CartRepository cartRepository;
     private final OrderNotifier orderNotifier;
     private final ShippingService shippingService;
+    private final ShippingQuoter shippingQuoter;
     private final AuthService authService;
  
     public OrderController(OrderRepository orderRepository, CartRepository cartRepository,
                             OrderNotifier orderNotifier, ShippingService shippingService,
-                            AuthService authService) {
+                            ShippingQuoter shippingQuoter, AuthService authService) {
         this.orderRepository = orderRepository;
         this.cartRepository = cartRepository;
         this.orderNotifier = orderNotifier;
         this.shippingService = shippingService;
+        this.shippingQuoter = shippingQuoter;
         this.authService = authService;
     }
  
@@ -58,7 +61,8 @@ public class OrderController {
         // Shipping is always computed here from the cart's actual weight — never taken from
         // the request. A client-supplied shipping_fee would let anyone check out for free
         // delivery just by sending 0.
-        BigDecimal shippingFee = shippingService.computeFee(cart.getItems());
+       BigDecimal shippingFee = shippingQuoter.quote(cart.getItems(),
+        request.addressLine1, request.city, request.province, request.postalCode);
  
         Order order = new Order(
                 request.fullName, request.email, request.phone,

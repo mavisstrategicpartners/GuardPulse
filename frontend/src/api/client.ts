@@ -165,8 +165,19 @@ export interface ShippingQuote {
  * recomputed server-side from the same logic at checkout time, so this is a preview,
  * not something the client can influence.
  */
-export async function fetchShippingQuote(cartToken: string): Promise<ShippingQuote> {
-  const { data } = await api.get<ShippingQuote>("/shipping/quote", { params: { cart_token: cartToken } });
+export async function fetchShippingQuote(
+  cartToken: string,
+  addr?: { street?: string; city?: string; province?: string; postalCode?: string },
+): Promise<ShippingQuote> {
+  const { data } = await api.get<ShippingQuote>("/shipping/quote", {
+    params: {
+      cart_token: cartToken,
+      street: addr?.street || undefined,
+      city: addr?.city || undefined,
+      province: addr?.province || undefined,
+      postal_code: addr?.postalCode || undefined,
+    },
+  });
   return data;
 }
 

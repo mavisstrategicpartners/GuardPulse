@@ -6,7 +6,6 @@ import {
   redirectToPayFast,
   fetchShippingQuote,
   errorMessage,
-
 } from "../api/client";
 import type { Order } from "../types";
 import { useAuth } from "../api/AuthContext";
@@ -24,34 +23,56 @@ export default function Checkout() {
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
- 
+
   const [shippingFee, setShippingFee] = useState<number | null>(null);
+  // Delivery address as typed so far — drives the live courier quote.
+  const [addr, setAddr] = useState({ street: "", city: "", province: "", postalCode: "" });
 
- 
-
-  // Live shipping estimate — recalculated whenever the cart's contents change. The final
-  // charge is always the server's own calculation at checkout time, not this preview.
+  // Live shipping quote — recalculated when the cart or delivery address changes (debounced so we
+  // don't call the courier on every keystroke). The final charge is always the server's own
+  // calculation at checkout time, not this preview.
   useEffect(() => {
     if (!cart || cart.items.length === 0) {
       setShippingFee(null);
       return;
     }
     let cancelled = false;
-    fetchShippingQuote(cart.token)
-      .then((quote) => {
-        if (!cancelled) setShippingFee(quote.fee);
-      })
-      .catch(() => {
-        if (!cancelled) setShippingFee(null);
-      });
+    const timer = setTimeout(() => {
+      fetchShippingQuote(cart.token, addr)
+        .then((quote) => {
+          if (!cancelled) setShippingFee(quote.fee);
+        })
+        .catch(() => {
+          if (!cancelled) setShippingFee(null);
+        });
+    }, 600);
     return () => {
       cancelled = true;
+      clearTimeout(timer);
     };
-  }, [cart?.token, cart?.items]);
+  }, [cart?.token, cart?.items, addr]);
 
   const items = cart?.items ?? [];
   const subtotal = parseFloat(String(cart?.total ?? "0"));
   const total = shippingFee === null ? null : subtotal + shippingFee;
+
+  function handleFormChange(e: FormEvent<HTMLFormElement>) {
+    const f = new FormData(e.currentTarget);
+    const next = {
+      street: String(f.get("address_line1") ?? "").trim(),
+      city: String(f.get("city") ?? "").trim(),
+      province: String(f.get("province") ?? ""),
+      postalCode: String(f.get("postal_code") ?? "").trim(),
+    };
+    setAddr((prev) =>
+      prev.street === next.street &&
+      prev.city === next.city &&
+      prev.province === next.province &&
+      prev.postalCode === next.postalCode
+        ? prev
+        : next,
+    );
+  }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -74,7 +95,7 @@ export default function Checkout() {
         city: String(form.get("city")),
         province: String(form.get("province")),
         postal_code: String(form.get("postal_code")),
-        // No shipping_fee here — the backend computes it from the cart's real weight.
+        // No shipping_fee here — the backend works it out from the cart and delivery address.
       });
     } catch (err) {
       setError(errorMessage(err, "We couldn't place that order. Check the fields and try again."));
@@ -116,6 +137,8 @@ export default function Checkout() {
     );
   }
 
+  const haveAddress = addr.postalCode.length === 4 && addr.city.length > 0;
+
   return (
     <div className="mx-auto grid max-w-5xl gap-10 px-6 py-14 md:grid-cols-[1.3fr_1fr]">
       <div>
@@ -133,7 +156,13 @@ export default function Checkout() {
             to fill in your details and keep track of this order — or just carry on as a guest.
           </p>
         )}
-        <form id="checkout-form" key={customer?.id ?? "guest"} onSubmit={handleSubmit} className="grid gap-4">
+        <form
+          id="checkout-form"
+          key={customer?.id ?? "guest"}
+          onSubmit={handleSubmit}
+          onChange={handleFormChange}
+          className="grid gap-4"
+        >
           <Field label="Full name" name="full_name" required defaultValue={customer?.full_name} />
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Email" name="email" type="email" required defaultValue={customer?.email} />
@@ -197,14 +226,16 @@ export default function Checkout() {
           ))}
         </div>
         <div className="mt-4 flex justify-between border-t border-line pt-3 text-[13.5px] text-muted">
-          <span>Shipping (RAM)</span>
+          <span>{haveAddress ? "Shipping" : "Shipping (estimate)"}</span>
           <span>{shippingFee === null ? "Calculating…" : formatZAR(shippingFee)}</span>
         </div>
+        {!haveAddress && (
+          <p className="mt-1 text-xs text-muted">Enter your city and postal code for your exact delivery price.</p>
+        )}
         <div className="mt-2 flex justify-between border-t border-line pt-3 font-display text-base font-semibold">
           <span>Total</span>
           <span>{total === null ? "—" : formatZAR(total)}</span>
         </div>
-       
       </aside>
     </div>
   );
