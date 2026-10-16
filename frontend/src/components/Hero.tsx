@@ -32,9 +32,12 @@ export default function Hero({ onShopClick, onSolarClick }: Props) {
           <h1 className="max-w-[480px] font-display text-4xl font-semibold leading-tight md:text-5xl">
             See what happens after dark.
           </h1>
-          <p className="mt-5 max-w-[420px] text-base leading-relaxed text-[#C7C2B6]">
+                   <p className="mt-5 max-w-[420px] text-base leading-relaxed text-[#C7C2B6]">
             Indoor, outdoor and solar-powered cameras that store footage locally — no forced monthly fees,
             no blind spots, built for load shedding and South African heat alike.
+          </p>
+          <p className="mt-3 max-w-[420px] text-base font-medium leading-relaxed text-paper">
+            No technician needed — mount it, plug it in and set it up yourself in minutes.
           </p>
           <div className="mt-8 flex flex-wrap gap-3.5">
             <button
