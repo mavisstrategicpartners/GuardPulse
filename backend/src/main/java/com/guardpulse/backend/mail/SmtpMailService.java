@@ -7,7 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
-@ConditionalOnProperty(name = "mail.enabled", havingValue = "true")
+@ConditionalOnProperty(name = "mail.provider", havingValue = "smtp")
 public class SmtpMailService implements MailService {
 
     private final JavaMailSender mailSender;
