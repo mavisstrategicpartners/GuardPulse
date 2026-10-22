@@ -62,7 +62,7 @@ beforeAll(async () => {
   const { seed } = await import("../scripts/seed.js");
   await seed();
   db = await import("../src/db.js");
-  app = (await import("../src/app.js")).createApp();
+  app = (await import("../src/core.js")).createApp();
 }, 60_000);
 
 afterAll(async () => { globalThis.fetch = realFetch; await db.closePool(); });
