@@ -1,0 +1,906 @@
+[
+  {
+    "slug": "hikvision-door-window-contact",
+    "name": "Hikvision DS-PD1-MC-WWS Wireless Door/Window Contact",
+    "brand": "hikvision",
+    "category": "alarms",
+    "category_label": "Alarms",
+    "bundle": false,
+    "sku": "DS-PD1-MC-WWS",
+    "price": "549.00",
+    "stock_qty": 5,
+    "tagline": "Extra door or window contact for the Hikvision wireless alarm.",
+    "description": "Extra door or window contact for the Hikvision wireless alarm.",
+    "specs": [
+      "Wireless door and window contact",
+      "Pairs with the Hikvision wireless alarm panel"
+    ],
+    "weight_kg": "0.10"
+  },
+  {
+    "slug": "hikvision-panic-keyfob",
+    "name": "Hikvision DS-PKFE-5 Wireless Keyfob with Panic Button",
+    "brand": "hikvision",
+    "category": "alarms",
+    "category_label": "Alarms",
+    "bundle": false,
+    "sku": "DSPKFE5",
+    "price": "549.00",
+    "stock_qty": 6,
+    "tagline": "Extra remote to arm, disarm and send a panic alert.",
+    "description": "Extra remote to arm, disarm and send a panic alert.",
+    "specs": [
+      "Wireless remote with panic button",
+      "Arms and disarms Hikvision wireless alarms"
+    ],
+    "weight_kg": "0.10"
+  },
+  {
+    "slug": "hikvision-wireless-alarm-kit",
+    "name": "Hikvision DS-PWA32-NKGT Wireless Alarm Kit",
+    "brand": "hikvision",
+    "category": "alarms",
+    "category_label": "Alarms",
+    "bundle": false,
+    "sku": "DS-PWA32-NKGT",
+    "price": "1459.00",
+    "stock_qty": 131,
+    "tagline": "Self-install wireless alarm with app alerts over Wi-Fi or Ethernet.",
+    "description": "Self-install wireless alarm with app alerts over Wi-Fi or Ethernet.",
+    "specs": [
+      "Panel takes up to 32 wireless zones",
+      "Wi-Fi and Ethernet with app push alerts (no GPRS)",
+      "Kit: panel, PIR detector, magnetic contact, remote",
+      "Built-in rechargeable backup battery"
+    ],
+    "weight_kg": "1.45"
+  },
+  {
+    "slug": "winx-track-essential-dash-cam",
+    "name": "WINX TRACK Essential 2K Dash Cam",
+    "brand": "winx",
+    "category": "car",
+    "category_label": "Car",
+    "bundle": false,
+    "sku": "WX-CD101",
+    "price": "859.00",
+    "stock_qty": 234,
+    "tagline": "2K windscreen camera with G-sensor crash recording.",
+    "description": "2K windscreen camera with G-sensor crash recording.",
+    "specs": [
+      "2K (2560 x 1440) at 25 fps",
+      "130° field of view",
+      "G-sensor saves footage on impact",
+      "F1.8 aperture; USB-C power"
+    ],
+    "weight_kg": "0.27"
+  },
+  {
+    "slug": "winx-track-pro-dash-cam",
+    "name": "WINX TRACK Pro 2K Dash Cam",
+    "brand": "winx",
+    "category": "car",
+    "category_label": "Car",
+    "bundle": false,
+    "sku": "WX-CD102",
+    "price": "1329.00",
+    "stock_qty": 228,
+    "tagline": "2K dash cam with G-sensor crash recording and app connection.",
+    "description": "2K dash cam with G-sensor crash recording and app connection.",
+    "specs": [
+      "2K video with F1.8 lens for low light",
+      "Built-in GPS logs speed and route",
+      "LED screen for on-device playback",
+      "Impact detection locks footage; Wi-Fi app"
+    ],
+    "weight_kg": "0.28"
+  },
+  {
+    "slug": "xiaomi-motion-night-light-3",
+    "name": "Xiaomi Motion Activated Night Light 3",
+    "brand": "xiaomi",
+    "category": "lighting",
+    "category_label": "Lighting",
+    "bundle": false,
+    "sku": "BHR8978GL",
+    "price": "629.00",
+    "stock_qty": 193,
+    "tagline": "Soft light that switches on when someone walks past at night.",
+    "description": "Soft light that switches on when someone walks past at night.",
+    "specs": [
+      "Switches on when it detects movement",
+      "Light sensor keeps it off in daylight",
+      "Two lighting modes with a soft glow",
+      "Magnetic base with strong adhesive; long battery life"
+    ],
+    "weight_kg": "0.12"
+  },
+  {
+    "slug": "solarix-solar-flood-lamp",
+    "name": "Solarix Jortam 200W Solar Flood Lamp with Panel",
+    "brand": "solarix",
+    "category": "lighting",
+    "category_label": "Lighting",
+    "bundle": false,
+    "sku": "SOL-JTBS200WTYTZ",
+    "price": "1089.00",
+    "stock_qty": 24,
+    "tagline": "Solar flood lamp with a separate panel and remote; no wiring.",
+    "description": "Solar flood lamp with a separate panel and remote; no wiring.",
+    "specs": [
+      "Flood lamp with separate 15 W solar panel",
+      "Up to 10 hours of light; 6500 K",
+      "IP66 with remote control"
+    ],
+    "weight_kg": "2.25"
+  },
+  {
+    "slug": "apacer-128gb-microsdxc",
+    "name": "Apacer 128GB microSDXC V10 A1 Memory Card",
+    "brand": "apacer",
+    "category": "memory-cards",
+    "category_label": "Memory Cards",
+    "bundle": false,
+    "sku": "AP128GMCSX10UB-R",
+    "price": "729.00",
+    "stock_qty": 175,
+    "tagline": "128GB card for cameras and dash cams, up to 100 MB/s read.",
+    "description": "128GB card for cameras and dash cams, up to 100 MB/s read.",
+    "specs": [
+      "128GB, up to 100 MB/s read",
+      "UHS-I, V10 video class, A1"
+    ],
+    "weight_kg": "0.10"
+  },
+  {
+    "slug": "apacer-64gb-microsdhc",
+    "name": "Apacer 64GB microSDHC V10 A1 Memory Card",
+    "brand": "apacer",
+    "category": "memory-cards",
+    "category_label": "Memory Cards",
+    "bundle": false,
+    "sku": "AP64GMCSX10UB-R",
+    "price": "369.00",
+    "stock_qty": 455,
+    "tagline": "64GB card for cameras, dash cams and phones, up to 100 MB/s read.",
+    "description": "64GB card for cameras, dash cams and phones, up to 100 MB/s read.",
+    "specs": [
+      "64GB, up to 100 MB/s read",
+      "UHS-I, V10 video class, A1"
+    ],
+    "weight_kg": "0.10"
+  },
+  {
+    "slug": "hiksemi-256gb-high-endurance",
+    "name": "Hiksemi Guard 256GB High-Endurance microSDXC",
+    "brand": "hiksemi",
+    "category": "memory-cards",
+    "category_label": "Memory Cards",
+    "bundle": false,
+    "sku": "HS-TF-L2-256G",
+    "price": "3419.00",
+    "stock_qty": 142,
+    "tagline": "High-endurance card built for 24/7 recording in cameras and dash cams.",
+    "description": "High-endurance card built for 24/7 recording in cameras and dash cams.",
+    "specs": [
+      "Built for 24/7 video recording",
+      "Up to 95 MB/s read, 50 MB/s write",
+      "Waterproof, shockproof, temperature resistant",
+      "Health monitoring with Hikvision cameras"
+    ],
+    "weight_kg": "0.01"
+  },
+  {
+    "slug": "conti-10000mah-mini-ups",
+    "name": "Conti 10,000mAh Smart Mini DC UPS",
+    "brand": "conti",
+    "category": "power",
+    "category_label": "Power",
+    "bundle": false,
+    "sku": "CUPS-18",
+    "price": "1089.00",
+    "stock_qty": 84,
+    "tagline": "Keeps your router and camera running for hours during load shedding.",
+    "description": "Keeps your router and camera running for hours during load shedding.",
+    "specs": [
+      "10,000mAh lithium battery",
+      "DC output selectable 5V / 9V / 12V, plus USB and PoE ports",
+      "Runs a router and fibre ONT for about 3 to 4 hours",
+      "Built-in AC charger; over 1,000 battery cycles"
+    ],
+    "weight_kg": "0.60"
+  },
+  {
+    "slug": "mercusys-mc200",
+    "name": "Mercusys MC200 Pan/Tilt Home Security Wi-Fi Camera",
+    "brand": "mercusys",
+    "category": "security-cameras",
+    "category_label": "Security Cameras",
+    "bundle": false,
+    "sku": "MC200",
+    "price": "639.00",
+    "stock_qty": 8,
+    "tagline": "Full HD indoor camera that turns to cover the whole room.",
+    "description": "Full HD indoor camera that turns to cover the whole room.",
+    "specs": [
+      "1080p Full HD video",
+      "360° horizontal pan with tilt",
+      "Night vision up to 12 m; two-way audio",
+      "microSD up to 512GB or cloud; Alexa and Google Assistant"
+    ],
+    "weight_kg": "0.35"
+  },
+  {
+    "slug": "tapo-c200-pan-tilt",
+    "name": "TP-Link Tapo C200 1080p Pan/Tilt Home Security Wi-Fi Camera",
+    "brand": "tplink",
+    "category": "security-cameras",
+    "category_label": "Security Cameras",
+    "bundle": false,
+    "sku": "TAPO-C200",
+    "price": "819.00",
+    "stock_qty": 6,
+    "tagline": "Best-selling indoor pan/tilt camera with night vision and motion alerts.",
+    "description": "Best-selling indoor pan/tilt camera with night vision and motion alerts.",
+    "specs": [
+      "1080p Full HD video",
+      "360° pan and 114° tilt",
+      "Night vision up to 9 m",
+      "Motion alerts plus a sound and light alarm"
+    ],
+    "weight_kg": "0.50"
+  },
+  {
+    "slug": "xiaomi-c301-indoor",
+    "name": "Xiaomi Smart Camera C301 2K Indoor Wi-Fi Security Camera",
+    "brand": "xiaomi",
+    "category": "security-cameras",
+    "category_label": "Security Cameras",
+    "bundle": false,
+    "sku": "BHR8683GL",
+    "price": "1549.00",
+    "stock_qty": 127,
+    "tagline": "2K indoor pan/tilt camera with AI person detection.",
+    "description": "2K indoor pan/tilt camera with AI person detection.",
+    "specs": [
+      "2K (2304 x 1296) resolution",
+      "Physical lens shield for privacy",
+      "Night vision with 6 x 940 nm infrared lights",
+      "microSD (8–256GB) or cloud storage; 2.4 GHz Wi-Fi"
+    ],
+    "weight_kg": "0.48"
+  },
+  {
+    "slug": "tapo-c216-indoor-outdoor",
+    "name": "TP-Link Tapo C216 2K Indoor/Outdoor Pan/Tilt Wi-Fi Camera",
+    "brand": "tplink",
+    "category": "security-cameras",
+    "category_label": "Security Cameras",
+    "bundle": false,
+    "sku": "TAPO-C216",
+    "price": "1189.00",
+    "stock_qty": 25,
+    "tagline": "2K pan/tilt camera with colour night vision, for inside or outside.",
+    "description": "2K pan/tilt camera with colour night vision, for inside or outside.",
+    "specs": [
+      "2K 3MP with colour night vision",
+      "360° pan and 152° tilt with motion tracking",
+      "AI detection; sound and light alarm",
+      "Two-way audio; microSD up to 512GB or cloud"
+    ],
+    "weight_kg": "0.60"
+  },
+  {
+    "slug": "tapo-c310-outdoor",
+    "name": "TP-Link Tapo C310 3MP Outdoor Wi-Fi Security Camera",
+    "brand": "tplink",
+    "category": "security-cameras",
+    "category_label": "Security Cameras",
+    "bundle": false,
+    "sku": "TAPO-C310",
+    "price": "1219.00",
+    "stock_qty": 16,
+    "tagline": "Weatherproof outdoor camera with night vision up to 30 m.",
+    "description": "Weatherproof outdoor camera with night vision up to 30 m.",
+    "specs": [
+      "3MP (2304 x 1296) video",
+      "Night vision up to 30 m",
+      "Outdoor housing with Wi-Fi antennas",
+      "Motion alerts to your phone"
+    ],
+    "weight_kg": "0.50"
+  },
+  {
+    "slug": "tapo-c660-solar-kit",
+    "name": "TP-Link Tapo C660 4K Solar-Powered Pan/Tilt Security Camera Kit",
+    "brand": "tplink",
+    "category": "security-cameras",
+    "category_label": "Security Cameras",
+    "bundle": false,
+    "sku": "TAPO-C660-KIT",
+    "price": "4549.00",
+    "stock_qty": 10,
+    "tagline": "4K pan/tilt camera with a solar panel, so it never needs a plug.",
+    "description": "4K pan/tilt camera with a solar panel, so it never needs a plug.",
+    "specs": [
+      "4K 8MP pan/tilt with 360° AI tracking",
+      "Starlight colour night vision",
+      "10,000 mAh battery with solar charging",
+      "microSD up to 512GB (card not included)"
+    ],
+    "weight_kg": "1.55"
+  },
+  {
+    "slug": "xiaomi-smart-doorbell-3s",
+    "name": "Xiaomi Smart Doorbell 3S",
+    "brand": "xiaomi",
+    "category": "smart-home",
+    "category_label": "Smart Home",
+    "bundle": false,
+    "sku": "BHR7068GL",
+    "price": "3409.00",
+    "stock_qty": 56,
+    "tagline": "2K battery video doorbell with an indoor chime in the box.",
+    "description": "2K battery video doorbell with an indoor chime in the box.",
+    "specs": [
+      "Built-in 2K camera, 107° vertical view",
+      "Night vision with 6 infrared lights",
+      "5200 mAh battery; indoor chime included",
+      "IP65 waterproof; Xiaomi security chip"
+    ],
+    "weight_kg": "0.22"
+  },
+  {
+    "slug": "tapo-h100-hub",
+    "name": "TP-Link Tapo H100 Smart Hub with Chime",
+    "brand": "tplink",
+    "category": "smart-home",
+    "category_label": "Smart Home",
+    "bundle": false,
+    "sku": "TAPO-H100",
+    "price": "599.00",
+    "stock_qty": 3,
+    "tagline": "Connects Tapo sensors and buttons, with a built-in chime and alarm.",
+    "description": "Connects Tapo sensors and buttons, with a built-in chime and alarm.",
+    "specs": [
+      "Links Tapo sensors and buttons to your Wi-Fi",
+      "Built-in chime and alarm sound",
+      "Needed for the T100, T110 and S200D"
+    ],
+    "weight_kg": "0.10"
+  },
+  {
+    "slug": "xiaomi-smart-home-hub-2",
+    "name": "Xiaomi Smart Home Hub 2",
+    "brand": "xiaomi",
+    "category": "smart-home",
+    "category_label": "Smart Home",
+    "bundle": false,
+    "sku": "BHR6765GL",
+    "price": "1939.00",
+    "stock_qty": 20,
+    "tagline": "Central hub that links Xiaomi sensors and sends alerts when you are out.",
+    "description": "Central hub that links Xiaomi sensors and sends alerts when you are out.",
+    "specs": [
+      "Controls Zigbee, Bluetooth and Wi-Fi Xiaomi devices",
+      "Supports up to 100 Bluetooth devices",
+      "Dual-band Wi-Fi plus RJ45 Ethernet port",
+      "Runs Xiaomi Home automations between devices"
+    ],
+    "weight_kg": "0.13"
+  },
+  {
+    "slug": "tapo-l535e-smart-bulb",
+    "name": "TP-Link Tapo L535E Smart Wi-Fi Bulb, Multicolour (E27)",
+    "brand": "tplink",
+    "category": "smart-home",
+    "category_label": "Smart Home",
+    "bundle": false,
+    "sku": "TAPO-L535E",
+    "price": "309.00",
+    "stock_qty": 6,
+    "tagline": "Bright 1055-lumen colour bulb you control from your phone or voice.",
+    "description": "Bright 1055-lumen colour bulb you control from your phone or voice.",
+    "specs": [
+      "E27 screw fitting, 1055 lumens (75 W equivalent)",
+      "Multicolour and dimmable",
+      "App and voice control"
+    ],
+    "weight_kg": "0.10"
+  },
+  {
+    "slug": "xiaomi-smart-lock-keypad",
+    "name": "Xiaomi Self-Install Smart Lock with Keypad",
+    "brand": "xiaomi",
+    "category": "smart-home",
+    "category_label": "Smart Home",
+    "bundle": false,
+    "sku": "BHR07XDGL",
+    "price": "5259.00",
+    "stock_qty": 27,
+    "tagline": "Keyless smart lock you fit yourself, with keypad and app control.",
+    "description": "Keyless smart lock you fit yourself, with keypad and app control.",
+    "specs": [
+      "Unlock by fingerprint, PIN codes, app, remote or voice",
+      "Works with Mi Home and Matter (Alexa, Google, Apple Home)",
+      "Lock status and access log in the app, no extra hub needed",
+      "Locks itself when the door closes; rechargeable battery"
+    ],
+    "weight_kg": "0.40"
+  },
+  {
+    "slug": "tapo-p110-smart-plug",
+    "name": "TP-Link Tapo P110 Mini Smart Wi-Fi Plug with Energy Monitoring",
+    "brand": "tplink",
+    "category": "smart-home",
+    "category_label": "Smart Home",
+    "bundle": false,
+    "sku": "TAPO-P110",
+    "price": "349.00",
+    "stock_qty": 6,
+    "tagline": "Switch appliances on and off from your phone, on a schedule or in Away Mode.",
+    "description": "Switch appliances on and off from your phone, on a schedule or in Away Mode.",
+    "specs": [
+      "App control with schedules and timers",
+      "Energy monitoring",
+      "Away mode; voice control",
+      "2.4 GHz Wi-Fi only"
+    ],
+    "weight_kg": "0.17"
+  },
+  {
+    "slug": "tapo-t100-motion-sensor",
+    "name": "TP-Link Tapo T100 Smart Motion Sensor",
+    "brand": "tplink",
+    "category": "smart-home",
+    "category_label": "Smart Home",
+    "bundle": false,
+    "sku": "TAPO-T100",
+    "price": "459.00",
+    "stock_qty": 1,
+    "tagline": "Detects movement up to 5 m and triggers alerts. Needs a Tapo hub.",
+    "description": "Detects movement up to 5 m and triggers alerts. Needs a Tapo hub.",
+    "specs": [
+      "120° / 5 m motion detection",
+      "Battery powered (CR2450 included)",
+      "Triggers alerts and Tapo smart actions",
+      "Needs a Tapo hub (H100 or H200)"
+    ],
+    "weight_kg": "0.10"
+  },
+  {
+    "slug": "tapo-t110-contact-sensor",
+    "name": "TP-Link Tapo T110 Smart Contact Sensor",
+    "brand": "tplink",
+    "category": "smart-home",
+    "category_label": "Smart Home",
+    "bundle": false,
+    "sku": "TAPO-T110",
+    "price": "369.00",
+    "stock_qty": 3,
+    "tagline": "Phone alert the moment a door or window opens. Needs a Tapo hub.",
+    "description": "Phone alert the moment a door or window opens. Needs a Tapo hub.",
+    "specs": [
+      "Alerts you when a door or window opens",
+      "About 2 years per battery",
+      "Triggers Tapo automations",
+      "Needs a Tapo hub (H100 or H200)"
+    ],
+    "weight_kg": "0.10"
+  },
+  {
+    "slug": "xiaomi-motion-sensor-2s",
+    "name": "Xiaomi Motion Sensor 2S",
+    "brand": "xiaomi",
+    "category": "smart-home",
+    "category_label": "Smart Home",
+    "bundle": false,
+    "sku": "BHR8995GL",
+    "price": "549.00",
+    "stock_qty": 110,
+    "tagline": "Motion sensor for Xiaomi Home automations. Needs a Xiaomi hub.",
+    "description": "Motion sensor for Xiaomi Home automations. Needs a Xiaomi hub.",
+    "specs": [
+      "Detects motion and micro-motion",
+      "Measures light level (0–1000 lux) for automations",
+      "Up to 3-year battery life",
+      "Bluetooth LE; triggers other Xiaomi devices"
+    ],
+    "weight_kg": "0.04"
+  },
+  {
+    "slug": "xiaomi-window-door-sensor-2",
+    "name": "Xiaomi Window and Door Sensor 2",
+    "brand": "xiaomi",
+    "category": "smart-home",
+    "category_label": "Smart Home",
+    "bundle": false,
+    "sku": "BHR5154GL",
+    "price": "549.00",
+    "stock_qty": 94,
+    "tagline": "Tells you when a door or window opens or closes.",
+    "description": "Tells you when a door or window opens or closes.",
+    "specs": [
+      "Alerts your phone when a door or window opens",
+      "Left-open reminder and event history",
+      "Built-in light sensor",
+      "Bluetooth 5.1 LE"
+    ],
+    "weight_kg": "0.06"
+  },
+  {
+    "slug": "ugreen-finetrack-mini-apple",
+    "name": "UGREEN FineTrack Mini Smart Finder for Apple",
+    "brand": "ugreen",
+    "category": "trackers",
+    "category_label": "Trackers",
+    "bundle": false,
+    "sku": "CM520-60387",
+    "price": "439.00",
+    "stock_qty": 39,
+    "tagline": "Small tracker for iPhone owners on the Apple Find My network.",
+    "description": "Small tracker for iPhone owners on the Apple Find My network.",
+    "specs": [
+      "Uses the Apple Find My network",
+      "Left-behind alerts",
+      "80 dB audible alert",
+      "Replaceable CR2032 battery, up to 18 months"
+    ],
+    "weight_kg": "0.09"
+  },
+  {
+    "slug": "ugreen-finetrack-slim-card",
+    "name": "UGREEN FineTrack Slim Pro Card Tracker for Android & iOS",
+    "brand": "ugreen",
+    "category": "trackers",
+    "category_label": "Trackers",
+    "bundle": false,
+    "sku": "CM915-75644",
+    "price": "649.00",
+    "stock_qty": 46,
+    "tagline": "Card-shaped tracker that slips into a wallet, for iPhone or Android.",
+    "description": "Card-shaped tracker that slips into a wallet, for iPhone or Android.",
+    "specs": [
+      "Card-shaped to fit a wallet or bag",
+      "Works with iPhone (Find My) and Android",
+      "IP68 water and dust resistance",
+      "Up to 5 years of rated battery life"
+    ],
+    "weight_kg": "0.11"
+  },
+  {
+    "slug": "ugreen-bluetooth-tracker",
+    "name": "UGREEN Smart Bluetooth Tracker for Android & iOS",
+    "brand": "ugreen",
+    "category": "trackers",
+    "category_label": "Trackers",
+    "bundle": false,
+    "sku": "CM916-75646",
+    "price": "329.00",
+    "stock_qty": 0,
+    "tagline": "Rechargeable tracker that works with both iPhone and Android.",
+    "description": "Rechargeable tracker that works with both iPhone and Android.",
+    "specs": [
+      "Works with Apple Find My and Google Find Hub",
+      "Recharges by USB-C, up to 365 days per charge",
+      "Built-in audible finder",
+      "Apple and Google certified"
+    ],
+    "weight_kg": "0.10"
+  },
+  {
+    "slug": "ugreen-finder-tag-samsung",
+    "name": "UGREEN Smart Finder Tag for Samsung Galaxy",
+    "brand": "ugreen",
+    "category": "trackers",
+    "category_label": "Trackers",
+    "bundle": false,
+    "sku": "CM829-55769",
+    "price": "499.00",
+    "stock_qty": 61,
+    "tagline": "Tracker for Samsung Galaxy phone owners, via SmartThings.",
+    "description": "Tracker for Samsung Galaxy phone owners, via SmartThings.",
+    "specs": [
+      "Works with Samsung SmartThings on Galaxy phones and tablets",
+      "Last known location beyond Bluetooth range",
+      "Loud 80 dB ring with custom tones",
+      "Up to 18-month battery; double-tap to ring your phone"
+    ],
+    "weight_kg": "0.09"
+  },
+  {
+    "slug": "xiaomi-tag-tracker-1pack",
+    "name": "Xiaomi Tag Bluetooth Smart Tracker (1 Pack)",
+    "brand": "xiaomi",
+    "category": "trackers",
+    "category_label": "Trackers",
+    "bundle": false,
+    "sku": "BHR08SPGL",
+    "price": "539.00",
+    "stock_qty": 137,
+    "tagline": "One tag for keys or a bag, works with iPhone or Android.",
+    "description": "One tag for keys or a bag, works with iPhone or Android.",
+    "specs": [
+      "Works with Apple Find My or Google Find Hub (chosen at setup)",
+      "Built-in buzzer to find nearby items",
+      "Last-seen location on a map",
+      "IP67; replaceable CR2032 battery lasts over a year"
+    ],
+    "weight_kg": "0.04"
+  },
+  {
+    "slug": "xiaomi-tag-tracker-4pack",
+    "name": "Xiaomi Tag Bluetooth Smart Tracker (4 Pack)",
+    "brand": "xiaomi",
+    "category": "trackers",
+    "category_label": "Trackers",
+    "bundle": false,
+    "sku": "BHR08SKGL",
+    "price": "1859.00",
+    "stock_qty": 34,
+    "tagline": "Four tags for keys, bag, wallet and luggage, works with iPhone or Android.",
+    "description": "Four tags for keys, bag, wallet and luggage, works with iPhone or Android.",
+    "specs": [
+      "Four tags: works with Apple Find My or Google Find Hub",
+      "Built-in buzzer to find nearby items",
+      "Last-seen location on a map",
+      "IP67; replaceable CR2032 battery lasts over a year"
+    ],
+    "weight_kg": "0.10"
+  },
+  {
+    "slug": "ready-to-record-home-camera-bundle",
+    "name": "Ready-to-Record Home Camera Bundle: Mercusys MC200 + 64GB microSD",
+    "brand": "mercusys",
+    "category": "security-cameras",
+    "category_label": "Security Cameras",
+    "bundle": true,
+    "sku": "BND-CAM-RECORD",
+    "price": "999.00",
+    "stock_qty": 8,
+    "tagline": "A pan/tilt home camera with the memory card already in the box, so it records from day one.",
+    "description": "Everything you need to start recording at home. The Mercusys MC200 turns 360° to cover the whole room, sees in the dark and talks both ways through the Mercusys app. The 64GB card saves motion clips on the camera itself, so you can play back footage without paying for cloud storage.",
+    "specs": [
+      "In the bundle: Mercusys MC200 Pan/Tilt Wi-Fi Camera (R639 alone)",
+      "In the bundle: Apacer 64GB microSDHC V10 A1 Memory Card (R369 alone)",
+      "Good to know: The camera supports cards up to 512GB if you want more space later"
+    ],
+    "weight_kg": "0.50"
+  },
+  {
+    "slug": "two-room-tapo-camera-pack",
+    "name": "Two-Room Camera Pack: 2 x Tapo C216 2K + 2 x 64GB microSD",
+    "brand": "tplink",
+    "category": "security-cameras",
+    "category_label": "Security Cameras",
+    "bundle": true,
+    "sku": "BND-CAM-2ROOM",
+    "price": "3089.00",
+    "stock_qty": 12,
+    "tagline": "Two 2K pan/tilt cameras with memory cards, to cover two rooms or a room and the yard.",
+    "description": "Cover the lounge and the back door, or the house and a granny flat. Each Tapo C216 records in 2K, turns 360° to follow movement and shows colour at night. Both cameras run in one Tapo app, and each comes with its own 64GB card for local recording.",
+    "specs": [
+      "In the bundle: 2 x TP-Link Tapo C216 2K Indoor/Outdoor Camera (R1,189 alone, each)",
+      "In the bundle: 2 x Apacer 64GB microSDHC Memory Card (R369 alone, each)",
+      "Good to know: The C216 works indoors or outdoors and takes cards up to 512GB"
+    ],
+    "weight_kg": "1.20"
+  },
+  {
+    "slug": "baby-and-pet-room-camera-bundle",
+    "name": "Baby & Pet Room Bundle: Tapo C200 Camera + Xiaomi Motion Night Light 3 + 64GB microSD",
+    "brand": "tplink",
+    "category": "security-cameras",
+    "category_label": "Security Cameras",
+    "bundle": true,
+    "sku": "BND-CAM-BABYPET",
+    "price": "1809.00",
+    "stock_qty": 6,
+    "tagline": "Watch the nursery or your pets from your phone, with a soft night light that comes on when someone walks in.",
+    "description": "The Tapo C200 turns and tilts to follow a crawling baby or a curious puppy, with night vision, two-way talk and motion alerts. The Xiaomi night light switches on by itself when someone walks past, so night feeds and checks are easier, and the camera picture is clearer. The 64GB card stores clips on the camera.",
+    "specs": [
+      "In the bundle: TP-Link Tapo C200 1080p Pan/Tilt Camera (R819 alone)",
+      "In the bundle: Xiaomi Motion Activated Night Light 3 (R629 alone)",
+      "In the bundle: Apacer 64GB microSDHC Memory Card (R369 alone)",
+      "Good to know: The camera uses the Tapo app; the night light works on its own and needs no app"
+    ],
+    "weight_kg": "1.00"
+  },
+  {
+    "slug": "solar-security-camera-bundle",
+    "name": "Solar Security Camera Bundle: Tapo C660 4K Solar Kit + 128GB microSD",
+    "brand": "tplink",
+    "category": "security-cameras",
+    "category_label": "Security Cameras",
+    "bundle": true,
+    "sku": "BND-CAM-SOLAR",
+    "price": "5269.00",
+    "stock_qty": 10,
+    "tagline": "A 4K pan/tilt camera that charges from the sun, with a memory card, for places with no plug.",
+    "description": "Ideal for gates, driveways and smallholdings. The Tapo C660 records in 4K, turns 360° to track movement and shows colour at night with two spotlights. The solar panel keeps its 10,000mAh battery charged, so there is no wiring. The 128GB card stores footage on the camera.",
+    "specs": [
+      "In the bundle: TP-Link Tapo C660 4K Solar-Powered Pan/Tilt Kit (R4,549 alone)",
+      "In the bundle: Apacer 128GB microSDXC Memory Card (R729 alone)",
+      "Good to know: No card comes in the Tapo box, which is why this bundle adds one. The camera takes cards up to 512GB"
+    ],
+    "weight_kg": "1.65"
+  },
+  {
+    "slug": "outdoor-night-watch-bundle",
+    "name": "Outdoor Night Watch Bundle: Tapo C310 + Solarix 200W Solar Flood Lamp + 64GB microSD",
+    "brand": "tplink",
+    "category": "security-cameras",
+    "category_label": "Security Cameras",
+    "bundle": true,
+    "sku": "BND-CAM-NIGHT",
+    "price": "2669.00",
+    "stock_qty": 16,
+    "tagline": "An outdoor camera plus a solar flood lamp that lights up the yard for clearer night footage.",
+    "description": "The Tapo C310 watches your yard or driveway in 3MP, with night vision up to 30 m. The Solarix flood lamp charges from its own solar panel and lights the area at night, so the camera picks up more detail. The 64GB card stores clips on the camera.",
+    "specs": [
+      "In the bundle: TP-Link Tapo C310 3MP Outdoor Camera (R1,219 alone)",
+      "In the bundle: Solarix Jortam 200W Solar Flood Lamp (R1,089 alone)",
+      "In the bundle: Apacer 64GB microSDHC Memory Card (R369 alone)",
+      "Good to know: The flood lamp has no motion sensor; it runs on its remote and timer"
+    ],
+    "weight_kg": "2.85"
+  },
+  {
+    "slug": "load-shedding-camera-bundle",
+    "name": "Load-Shedding Camera Bundle: Xiaomi C301 + Conti 10,000mAh Mini DC UPS + 64GB microSD",
+    "brand": "xiaomi",
+    "category": "security-cameras",
+    "category_label": "Security Cameras",
+    "bundle": true,
+    "sku": "BND-POWER-LOADSHED",
+    "price": "2999.00",
+    "stock_qty": 84,
+    "tagline": "A 2K home camera that keeps recording during load shedding, because the UPS keeps it and your router on.",
+    "description": "A Wi-Fi camera goes dark in a power cut unless the router stays on too. The Conti mini DC UPS powers your router from its DC port and the Xiaomi C301 camera from its USB port. The C301 records in 2K, turns to cover the room and spots people with AI detection. The 64GB card keeps recording locally.",
+    "specs": [
+      "In the bundle: Xiaomi Smart Camera C301 2K Indoor Camera (R1,549 alone)",
+      "In the bundle: Conti 10,000mAh Smart Mini DC UPS (R1,089 alone)",
+      "In the bundle: Apacer 64GB microSDHC Memory Card (R369 alone)",
+      "Good to know: Set the UPS DC output to match your router (9V or 12V). Run time is shorter than the 3 to 4 hours quoted for a router alone, because the camera shares the battery"
+    ],
+    "weight_kg": "1.08"
+  },
+  {
+    "slug": "tapo-door-and-window-alert-kit",
+    "name": "Tapo Door & Window Alert Kit: H100 Hub + T110 Contact Sensor + T100 Motion Sensor",
+    "brand": "tplink",
+    "category": "smart-home",
+    "category_label": "Smart Home",
+    "bundle": true,
+    "sku": "BND-SMART-TAPOALERT",
+    "price": "1419.00",
+    "stock_qty": 1,
+    "tagline": "Get a phone alert when a door opens or someone moves, with the hub and sensors included.",
+    "description": "Tapo sensors only work with a Tapo hub, so this kit includes one. The T110 alerts you when a door or window opens; the T100 picks up movement in a passage or room. The H100 hub links both sensors to your Wi-Fi and doubles as a loud alarm and doorbell chime.",
+    "specs": [
+      "In the bundle: TP-Link Tapo H100 Smart Hub with Chime (R599 alone)",
+      "In the bundle: TP-Link Tapo T110 Smart Contact Sensor (R369 alone)",
+      "In the bundle: TP-Link Tapo T100 Smart Motion Sensor (R459 alone)",
+      "Good to know: The hub takes up to 64 Tapo sensors and buttons, so you can add more later"
+    ],
+    "weight_kg": "0.30"
+  },
+  {
+    "slug": "xiaomi-door-and-window-alert-kit",
+    "name": "Xiaomi Door & Window Alert Kit: Hub 2 + 2 x Door Sensor 2 + Motion Sensor 2S",
+    "brand": "xiaomi",
+    "category": "smart-home",
+    "category_label": "Smart Home",
+    "bundle": true,
+    "sku": "BND-SMART-XIAOMIALERT",
+    "price": "3579.00",
+    "stock_qty": 20,
+    "tagline": "Cover the front and back doors and a passage, with the Xiaomi hub you need for alerts away from home.",
+    "description": "Two Xiaomi door sensors tell you when the front and back doors open, and the Motion Sensor 2S watches a passage or room. The Xiaomi Smart Home Hub 2 connects them all, so you get alerts on your phone even when you are not at home.",
+    "specs": [
+      "In the bundle: Xiaomi Smart Home Hub 2 (R1,939 alone)",
+      "In the bundle: 2 x Xiaomi Window and Door Sensor 2 (R549 alone, each)",
+      "In the bundle: Xiaomi Motion Sensor 2S (R549 alone)",
+      "Good to know: The Motion Sensor 2S needs a Bluetooth Mesh gateway such as the Hub 2 to work fully"
+    ],
+    "weight_kg": "0.28"
+  },
+  {
+    "slug": "away-from-home-tapo-bundle",
+    "name": "Away-From-Home Bundle: Tapo C216 Camera + P110 Smart Plug + L535E Smart Bulb + 64GB microSD",
+    "brand": "tplink",
+    "category": "smart-home",
+    "category_label": "Smart Home",
+    "bundle": true,
+    "sku": "BND-SMART-AWAY",
+    "price": "2199.00",
+    "stock_qty": 6,
+    "tagline": "Keep an eye on the house and make it look lived in while you are away, all from one Tapo app.",
+    "description": "The Tapo C216 camera watches the house in 2K with colour night vision. The P110 smart plug's Away Mode switches a lamp on and off at random so the house looks occupied. Add the colour smart bulb to a main light and control it from your phone. Everything runs in one Tapo app, and the 64GB card records on the camera.",
+    "specs": [
+      "In the bundle: TP-Link Tapo C216 2K Indoor/Outdoor Camera (R1,189 alone)",
+      "In the bundle: TP-Link Tapo P110 Mini Smart Wi-Fi Plug (R349 alone)",
+      "In the bundle: TP-Link Tapo L535E Smart Wi-Fi Bulb (R309 alone)",
+      "In the bundle: Apacer 64GB microSDHC Memory Card (R369 alone)",
+      "Good to know: The smart plug and bulb need 2.4 GHz Wi-Fi"
+    ],
+    "weight_kg": "0.97"
+  },
+  {
+    "slug": "xiaomi-front-door-bundle",
+    "name": "Xiaomi Front Door Bundle: Smart Doorbell 3S + Self-Install Smart Lock",
+    "brand": "xiaomi",
+    "category": "smart-home",
+    "category_label": "Smart Home",
+    "bundle": true,
+    "sku": "BND-DOOR-FRONT",
+    "price": "8659.00",
+    "stock_qty": 27,
+    "tagline": "See who is at the door and let them in from one app, with a keyless lock you fit yourself.",
+    "description": "The Xiaomi Smart Doorbell 3S shows a 2K, 180° view of your doorstep and rings an indoor chime that comes in the box. The self-install smart lock opens with a keypad code or the Xiaomi Home app, so there are no keys to lose. Both run in the same app.",
+    "specs": [
+      "In the bundle: Xiaomi Smart Doorbell 3S (R3,409 alone)",
+      "In the bundle: Xiaomi Self-Install Smart Lock with Keypad (R5,259 alone)",
+      "Good to know: The doorbell runs on a rechargeable battery that needs charging about three times a year"
+    ],
+    "weight_kg": "0.62"
+  },
+  {
+    "slug": "hikvision-whole-house-wireless-alarm-bundle",
+    "name": "Hikvision Whole-House Wireless Alarm Bundle: Alarm Kit + 2 Extra Door Contacts + Extra Remote",
+    "brand": "hikvision",
+    "category": "alarms",
+    "category_label": "Alarms",
+    "bundle": true,
+    "sku": "BND-ALARM-HOUSE",
+    "price": "3089.00",
+    "stock_qty": 2,
+    "tagline": "A self-install wireless alarm with enough door contacts and remotes for a typical family home.",
+    "description": "The Hikvision wireless alarm kit sends alerts to your phone over Wi-Fi or Ethernet and comes with one door contact, one motion detector and one remote. This bundle adds two more door contacts and a second remote with a panic button, so you can cover more doors and give every adult a remote.",
+    "specs": [
+      "In the bundle: Hikvision DS-PWA32-NKGT Wireless Alarm Kit (R1,459 alone)",
+      "In the bundle: 2 x Hikvision DS-PD1-MC-WWS Door/Window Contact (R549 alone, each)",
+      "In the bundle: Hikvision DS-PKFE-5 Wireless Keyfob with Panic Button (R549 alone)",
+      "Good to know: All parts are the same 868 MHz Hikvision models, and the panel takes up to 32 wireless devices"
+    ],
+    "weight_kg": "1.65"
+  },
+  {
+    "slug": "dash-cam-starter-bundle",
+    "name": "Dash Cam Starter Bundle: WINX TRACK Essential 2K + 64GB microSD",
+    "brand": "winx",
+    "category": "car",
+    "category_label": "Car",
+    "bundle": true,
+    "sku": "BND-CAR-DASH",
+    "price": "1229.00",
+    "stock_qty": 234,
+    "tagline": "A 2K dash cam with a memory card included, so it records from your first drive.",
+    "description": "The WINX TRACK Essential records the road in 2K and saves a protected clip if it senses a bump. WINX sells the camera without a card, so this bundle adds a 64GB card and you are ready to go.",
+    "specs": [
+      "In the bundle: WINX TRACK Essential 2K Dash Cam (R859 alone)",
+      "In the bundle: Apacer 64GB microSDHC Memory Card (R369 alone)",
+      "Good to know: Replace the card every year or so if you drive a lot, as loop recording wears cards out"
+    ],
+    "weight_kg": "0.37"
+  },
+  {
+    "slug": "all-day-dash-cam-bundle",
+    "name": "All-Day Dash Cam Bundle: WINX TRACK Pro 2K + Hiksemi 256GB High-Endurance microSD",
+    "brand": "winx",
+    "category": "car",
+    "category_label": "Car",
+    "bundle": true,
+    "sku": "BND-CAR-DASHPRO",
+    "price": "4749.00",
+    "stock_qty": 142,
+    "tagline": "A 2K dash cam with a high-endurance card made for drivers who record all day.",
+    "description": "Built for ride-hailing, delivery and fleet drivers. The WINX TRACK Pro records in 2K and protects crash clips automatically. The Hiksemi Guard 256GB card is a high-endurance card made for non-stop recording, and is the largest card the camera supports.",
+    "specs": [
+      "In the bundle: WINX TRACK Pro 2K Dash Cam (R1,329 alone)",
+      "In the bundle: Hiksemi Guard 256GB High-Endurance microSDXC (R3,419 alone)",
+      "Good to know: The WINX TRACK Pro supports cards up to 256GB"
+    ],
+    "weight_kg": "0.29"
+  }
+]
