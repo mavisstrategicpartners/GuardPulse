@@ -12,9 +12,8 @@ import { payments } from "./routes/payments.js";
 import { shipping } from "./routes/shipping.js";
 import { admin } from "./admin/routes.js";
 
-export function createApp() {
-  const app = new Hono({ strict: false }); // "/x" and "/x/" both work, like the old API clients expect
-
+export function createApp(app: Hono = new Hono({ strict: false })) {
+  
   app.use("/api/*", cors({
     origin: (origin) => (config().corsOrigins.includes(origin) ? origin : null),
     allowMethods: ["GET", "POST", "PATCH", "DELETE", "PUT", "OPTIONS"],
